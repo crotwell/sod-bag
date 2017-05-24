@@ -1,0 +1,21 @@
+
+group = 'edu.sc.seis'
+version = '4.0.0-SNAPSHOT'
+
+apply plugin: 'eclipse'
+apply plugin: 'java-library'
+
+dependencies {
+  api 'edu.sc.seis:sod-model:4.0.0-SNAPSHOT'
+  implementation project(':TauP')
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("edu.sc.seis:sod-model") with project(":sod-model")
+    }
+}
+
+repositories {
+  mavenCentral()
+}
