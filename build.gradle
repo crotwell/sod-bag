@@ -10,12 +10,15 @@ dependencies {
   implementation 'edu.sc.seis:sod-util:4.0.0-SNAPSHOT'
   implementation project(':TauP')
   implementation  "com.oregondsp.signalprocessing:oregondsp:2011"
+  testCompile  'edu.sc.seis:sod-mock:4.0.0-SNAPSHOT'
+  testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute module("edu.sc.seis:sod-model") with project(":sod-model")
         substitute module("edu.sc.seis:sod-util") with project(":sod-util")
+        substitute module("edu.sc.seis:sod-mock") with project(":sod-mock")
     }
 }
 
