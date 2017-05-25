@@ -3,8 +3,8 @@ package edu.sc.seis.sod.bag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /**
  * RMean.java

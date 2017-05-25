@@ -7,12 +7,15 @@ apply plugin: 'java-library'
 
 dependencies {
   api 'edu.sc.seis:sod-model:4.0.0-SNAPSHOT'
+  implementation 'edu.sc.seis:sod-util:4.0.0-SNAPSHOT'
   implementation project(':TauP')
+  implementation  "com.oregondsp.signalprocessing:oregondsp:2011"
 }
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute module("edu.sc.seis:sod-model") with project(":sod-model")
+        substitute module("edu.sc.seis:sod-util") with project(":sod-util")
     }
 }
 

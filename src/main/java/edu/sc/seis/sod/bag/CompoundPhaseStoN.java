@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.sod.model.common.TimeInterval;
 
 /** Generalizes SimplePhaseStoN by allowing the phase for the short time window (numerator) to be
  * different from the phase for the long time window (denominator). This is useful when comparing the signal

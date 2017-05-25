@@ -1,11 +1,12 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /**
  * Calculus.java
@@ -64,7 +65,7 @@ public class Calculus {
 				.createUnitImpl(outSeis.y_unit), UnitImpl.SECOND);
 		MicroSecondDate begin = outSeis.getBeginTime();
 		begin.add(new TimeInterval(samp.getPeriod().divideBy(2)));
-		outSeis.begin_time = begin.getFissuresTime();
+		outSeis.begin_time = new Time(begin);
 		return outSeis;
 	}
 

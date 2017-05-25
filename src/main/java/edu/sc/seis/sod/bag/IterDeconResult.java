@@ -1,5 +1,5 @@
 package edu.sc.seis.sod.bag;
-import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeInterval;
 
 
 

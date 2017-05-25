@@ -3,17 +3,18 @@ package edu.sc.seis.sod.bag;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.IfTimeSeries.EncodedData;
-import edu.iris.Fissures.IfTimeSeries.TimeSeriesDataSel;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.time.ReduceTool;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.EncodedData;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.seismogram.TimeSeriesDataSel;
+import edu.sc.seis.sod.util.time.RangeTool;
+import edu.sc.seis.sod.util.time.ReduceTool;
 
 /**
  * Cuts seismograms based on a begin and end time.
@@ -82,11 +83,10 @@ public class Cut implements LocalSeismogramFunction {
             System.arraycopy(inD, beginIndex, outD, 0, endIndex - beginIndex+1);
             outSeis = new LocalSeismogramImpl(seis, outD);
         } // end of else
-        outSeis.begin_time = seis.getBeginTime()
+        outSeis.begin_time = new Time(seis.getBeginTime()
                 .add((TimeInterval)seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(beginIndex))
-                .getFissuresTime();
+                        .multiplyBy(beginIndex)));
         return outSeis;
     }
 
@@ -100,7 +100,7 @@ public class Cut implements LocalSeismogramFunction {
         QuantityImpl endShift = end.subtract(seis.getBeginTime());;
         endShift = endShift.divideBy(sampPeriod);
         endShift = endShift.convertTo(SEC_PER_SEC); // should be dimensonless
-        int endIndex = (int)Math.floor(endShift.value);
+        int endIndex = (int)Math.floor(endShift.getValue());
         if(endIndex < 0) {
             endIndex = 0;
         }
@@ -116,7 +116,7 @@ public class Cut implements LocalSeismogramFunction {
         beginShift = beginShift.divideBy(sampPeriod);
         beginShift = beginShift.convertTo(SEC_PER_SEC); // should be
         // dimensonless
-        int beginIndex = (int)Math.ceil(beginShift.value);
+        int beginIndex = (int)Math.ceil(beginShift.getValue());
         if(beginIndex < 0) {
             beginIndex = 0;
         } // end of if (beginIndex < 0)
@@ -152,12 +152,12 @@ public class Cut implements LocalSeismogramFunction {
             return null;
         } // end of if ()
         if(begin.after(filterBegin)) {
-            result.start_time = begin.getFissuresTime();
+            result.start_time = begin;
         } else {
             result.start_time = original.start_time;
         }
         if(end.before(filterEnd)) {
-            result.end_time = end.getFissuresTime();
+            result.end_time = end;
         } else {
             result.end_time = original.end_time;
         }
@@ -215,11 +215,10 @@ public class Cut implements LocalSeismogramFunction {
         TimeSeriesDataSel ds = new TimeSeriesDataSel();
         ds.encoded_values((EncodedData[])outData.toArray(new EncodedData[outData.size()]));
         LocalSeismogramImpl outSeis = new LocalSeismogramImpl(seis, ds);
-        outSeis.begin_time = seis.getBeginTime()
+        outSeis.begin_time = new Time(seis.getBeginTime()
                 .add((TimeInterval)seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(firstUsedPoint))
-                .getFissuresTime();
+                        .multiplyBy(firstUsedPoint)));
         outSeis.num_points = pointsInNewSeis;
         return outSeis;
     }
@@ -227,7 +226,7 @@ public class Cut implements LocalSeismogramFunction {
     /** Applys a coarse cut to the seismograms based on the request filter. This uses Cut.applyEncoded to cut
      * sections of encoded data without decompressing first. Thus large data volumes can be reduced without memory problems.
      */
-    public static LocalSeismogramImpl[] coarseCut(RequestFilter[] aFilterseq, LocalSeismogram[] seis) throws FissuresException {
+    public static LocalSeismogramImpl[] coarseCut(RequestFilter[] aFilterseq, LocalSeismogramImpl[] seis) throws FissuresException {
         List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
         RequestFilter[] mergedRequest = ReduceTool.merge(aFilterseq);
         for (int i = 0; i < mergedRequest.length; i++) {
@@ -242,5 +241,76 @@ public class Cut implements LocalSeismogramFunction {
         
         return out.toArray(new LocalSeismogramImpl[0]);
     }
+    
+}
+
+class CutReduceTool extends ReduceTool {
+    
+    /**
+     * Return an array with any overlapping seismograms turned into a single
+     * seismogram and any contained seismograms thrown away. The input array is
+     * unmodified.
+     */
+    public static LocalSeismogramImpl[] cutOverlap(LocalSeismogramImpl[] seis)
+            throws FissuresException {
+        // Don't modify the passed in array
+        LocalSeismogramImpl[] tmp = new LocalSeismogramImpl[seis.length];
+        for(int i = 0; i < tmp.length; i++) {
+            tmp[i] = seis[i];
+        }
+        seis = tmp;
+        LSMerger merger = new LSMerger();
+        for(int i = 0; i < seis.length; i++) {
+            if(seis[i] == null) {
+                continue;
+            }
+            boolean changeMade;
+            do {
+                changeMade = false;
+                for(int j = i + 1; j < seis.length; j++) {
+                    if(seis[j] == null) {
+                        continue;
+                    }
+                    if(contains(seis[i], seis[j])) {
+                        seis[j] = null;
+                        changeMade = true;
+                    } else if(contains(seis[j], seis[i])) {
+                        seis[i] = seis[j];
+                        seis[j] = null;
+                        changeMade = true;
+                    } else if(RangeTool.areOverlapping(seis[i], seis[j])) {
+                        MicroSecondDate iEnd = seis[i].getEndTime();
+                        MicroSecondDate iBegin = seis[i].getBeginTime();
+                        TimeInterval halfSample = (TimeInterval)seis[i].getSampling()
+                                .getPeriod()
+                                .divideBy(2);
+                        if(iEnd.before(seis[j].getEndTime())) {
+                            // overlap on i's end
+                            Cut cut = new Cut(iEnd.add(halfSample),
+                                              seis[j].getEndTime());
+                            seis[j] = cut.apply(seis[j]);
+                        } else {
+                            Cut cut = new Cut(seis[j].getBeginTime(),
+                                              iBegin.subtract(halfSample));
+                            seis[j] = cut.apply(seis[j]);
+                        }
+                        if (seis[j] != null) {
+                            seis[i] = merger.merge(seis[i], seis[j]);
+                            seis[j] = null;
+                        }
+                        changeMade = true;
+                    }
+                }
+            } while(changeMade);
+        }
+        List results = new ArrayList(seis.length);
+        for(int i = 0; i < seis.length; i++) {
+            if(seis[i] != null) {
+                results.add(seis[i]);
+            }
+        }
+        return (LocalSeismogramImpl[])results.toArray(new LocalSeismogramImpl[0]);
+    }
+
 
 }// Cut

@@ -3,10 +3,10 @@ package edu.sc.seis.sod.bag;
 
 import java.util.List;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /**
  * Statistics.java

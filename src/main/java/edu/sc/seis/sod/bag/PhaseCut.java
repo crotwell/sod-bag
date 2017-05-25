@@ -11,15 +11,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 public class PhaseCut {
 
@@ -42,7 +42,7 @@ public class PhaseCut {
      *    at the distance.
      */
     public LocalSeismogramImpl cut(Location stationLoc,
-                                   Origin origin,
+                                   OriginImpl origin,
                                    LocalSeismogramImpl seis)
         throws TauModelException, PhaseNonExistent, FissuresException  {
         List<Arrival> beginArrivals = timeCalc.calcTravelTimes(stationLoc, origin, new String[] {beginPhase});

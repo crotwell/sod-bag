@@ -1,10 +1,9 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.IfTimeSeries.TimeSeriesDataSel;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.TimeSeriesDataSel;
 
 public class Decimate implements LocalSeismogramFunction {
 

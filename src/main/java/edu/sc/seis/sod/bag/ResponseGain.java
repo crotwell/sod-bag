@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
+
+
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.Sensitivity;
 
 /**
  * Applies the overall sensitivity to a seismogram. This is purely a scale
@@ -22,7 +23,7 @@ public class ResponseGain {
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
                                             Instrumentation inst)
             throws FissuresException {
-        if(!InstrumentationLoader.isValid(inst)) {
+        if(!Instrumentation.isValid(inst)) {
             throw new IllegalArgumentException("Invalid instrumentation for "
                     + ChannelIdUtil.toString(seis.channel_id));
         }
@@ -33,14 +34,14 @@ public class ResponseGain {
 
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
                                             Sensitivity sensitivity,
-                                            Unit initialUnits)
+                                            UnitImpl initialUnits)
             throws FissuresException {
         return apply(seis, sensitivity.sensitivity_factor, initialUnits);
     }
 
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
                                             float sensitivity_factor,
-                                            Unit initialUnits)
+                                            UnitImpl initialUnits)
             throws FissuresException {
         // Sensitivity is COUNTs per Ground Motion, so should divide in order to
         // convert COUNT seismogram into Ground Motion.
@@ -64,4 +65,6 @@ public class ResponseGain {
         outSeis.y_unit = initialUnits;
         return outSeis;
     }
+    
+    
 }// ResponseGain

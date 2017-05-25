@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.IfSeismogramDC.LocalMotionVector;
+import edu.sc.seis.sod.model.seismogram.LocalMotionVectorImpl;
 
 /**
  * LocalMotionVectorFunction.java
@@ -13,6 +13,6 @@ import edu.iris.Fissures.IfSeismogramDC.LocalMotionVector;
  */
 public interface LocalMotionVectorFunction {
 
-    public LocalMotionVector apply(LocalMotionVector vec);
+    public LocalMotionVectorImpl apply(LocalMotionVectorImpl vec);
 
 } // LocalMotionVectorFunction

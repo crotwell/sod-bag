@@ -8,10 +8,10 @@ package edu.sc.seis.sod.bag;
 
 import java.util.LinkedList;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /** Adapted from reftrg.f from Tom Owens and reftrig.c from Passcal.
  * c

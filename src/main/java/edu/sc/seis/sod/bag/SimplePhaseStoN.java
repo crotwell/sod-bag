@@ -8,15 +8,15 @@ package edu.sc.seis.sod.bag;
 
 import java.util.List;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /** Calculates a signal to noise ration around a phase. The short time window
  * (numerator of the ratio) is given by the standard deviation of the section of the seismogram
@@ -114,7 +114,7 @@ public class SimplePhaseStoN {
     /** Calculates the trigger value for the given windows. Returns null if
      * either of the windows have no data in them. */
     public LongShortTrigger process(Location stationLoc,
-                                    Origin origin,
+                                    OriginImpl origin,
                                     LocalSeismogramImpl seis) throws FissuresException, TauModelException, PhaseNonExistent {
         LocalSeismogramImpl shortSeis = shortCut.cut(stationLoc, origin, seis);
         LocalSeismogramImpl longSeis = longCut.cut(stationLoc, origin, seis);

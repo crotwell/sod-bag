@@ -1,11 +1,10 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class FlippedChannel {
     public static ChannelSeismogram correct(ChannelImpl chan,
@@ -25,7 +24,7 @@ public class FlippedChannel {
         return new ChannelSeismogram(chan, seis, sens);
     }
 
-    public static boolean check(Channel chan) {
+    public static boolean check(ChannelImpl chan) {
         return (chan.get_code().charAt(2) == 'Z' && check(OrientationUtil.getUp(),
                                                           chan))
                 || (chan.get_code().charAt(2) == 'N' && check(OrientationUtil.getNorth(),
@@ -34,7 +33,7 @@ public class FlippedChannel {
                                                               chan));
     }
 
-    public static boolean check(Orientation correct, Channel chan) {
+    public static boolean check(Orientation correct, ChannelImpl chan) {
         return OrientationUtil.angleBetween(correct, chan.getOrientation()) >= 180 - tol;
     }
 

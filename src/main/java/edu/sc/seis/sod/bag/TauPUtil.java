@@ -10,15 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModel;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 public class TauPUtil {
 
@@ -26,11 +26,11 @@ public class TauPUtil {
         taup_time = new TauP_Time(modelName);
     }
 
-    public List<Arrival> calcTravelTimes(Station station, Origin origin, String[] phaseNames) throws TauModelException {
+    public List<Arrival> calcTravelTimes(StationImpl station, OriginImpl origin, String[] phaseNames) throws TauModelException {
         return calcTravelTimes(station.getLocation(), origin, phaseNames);
     }
 
-    public synchronized List<Arrival> calcTravelTimes(Location stationLoc, Origin origin, String[] phaseNames) throws TauModelException {
+    public synchronized List<Arrival> calcTravelTimes(Location stationLoc, OriginImpl origin, String[] phaseNames) throws TauModelException {
         QuantityImpl depth = (QuantityImpl)origin.getLocation().depth;
         depth = depth.convertTo(UnitImpl.KILOMETER);
         double depthVal = depth.getValue();

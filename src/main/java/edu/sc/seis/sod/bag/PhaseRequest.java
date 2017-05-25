@@ -5,21 +5,20 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.LocationUtil;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.TimeUtils;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.LocationUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 public class PhaseRequest  {
 
@@ -90,13 +89,13 @@ public class PhaseRequest  {
         this.negateEndOffsetRatio = negateEndOffsetRatio;
     }
 
-    public RequestFilter generateRequest(EventAccessOperations event,
-                                         Channel channel) throws Exception {
-        Origin origin = EventUtil.extractOrigin(event);
+    public RequestFilter generateRequest(CacheEvent event,
+                                         ChannelImpl channel) throws Exception {
+        OriginImpl origin = EventUtil.extractOrigin(event);
 
         synchronized(this) {
             if(prevRequestFilter != null
-                    && TimeUtils.areEqual(origin.getOriginTime(), prevOriginTime)
+                    && origin.getOriginTime().equals( prevOriginTime)
                     && LocationUtil.areEqual(origin.getLocation(), prevOriginLoc)
                     && LocationUtil.areEqual(channel.getSite().getLocation(), prevSiteLoc)) {
                 // don't need to do any work
@@ -142,8 +141,8 @@ public class PhaseRequest  {
             prevSiteLoc = channel.getSite().getLocation();
             prevOriginTime = origin.getOriginTime();
             prevRequestFilter = new RequestFilter(channel.get_id(),
-                                                  bDate.getFissuresTime(),
-                                                  eDate.getFissuresTime());
+                                                  bDate,
+                                                  eDate);
         }
         logger.debug("Generated request from "
                 + bDate
@@ -154,7 +153,7 @@ public class PhaseRequest  {
         return prevRequestFilter;
     }
 
-    private double getArrivalTime(String phase, Channel chan, Origin origin)
+    private double getArrivalTime(String phase, ChannelImpl chan, OriginImpl origin)
             throws TauModelException {
         if(phase.equals(ORIGIN)) {
             return 0;

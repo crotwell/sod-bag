@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
-import edu.iris.Fissures.IfSeismogramDC.VectorComponent;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.seismogramDC.LocalMotionVectorImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.seismogram.LocalMotionVectorImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.VectorComponent;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
 
 /**
  * MotionVectorUtil.java
@@ -23,7 +23,7 @@ public class MotionVectorUtil {
      *	@throws IncompatibleSeismograms if the channel ids
      *  or the time basis of the seismograms are not compatible.
      */	
-    public static LocalMotionVectorImpl create(LocalSeismogram[] seismograms)
+    public static LocalMotionVectorImpl create(LocalSeismogramImpl[] seismograms)
 	throws IncompatibleSeismograms {
 	for (int k=1; k<2; k++) {
 	     

@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /**
  * LocalSeismogramFunction.java

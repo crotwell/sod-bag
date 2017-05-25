@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class PolarityCheck {
 

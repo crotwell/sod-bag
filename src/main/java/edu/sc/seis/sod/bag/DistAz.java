@@ -1,34 +1,12 @@
 package edu.sc.seis.sod.bag;
 
-/**
- c
- c Subroutine to calculate the Great Circle Arc distance
- c    between two sets of geographic coordinates
- c
- c Equations take from Bullen, pages 154, 155
- c
- c T. Owens, September 19, 1991
- c           Sept. 25 -- fixed az and baz calculations
- c
- P. Crotwell, Setember 27, 1995
- Converted to c to fix annoying problem of fortran giving wrong
- answers if the input doesn't contain a decimal point.
-
- H. P. Crotwell, September 18, 1997
- Java version for direct use in java programs.
- *
- * C. Groves, May 4, 2004
- * Added enough convenience constructors to choke a horse and made public double
- * values use accessors so we can use this class as an immutable
-
- */
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.SiteImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 public class DistAz {
     /**
@@ -36,7 +14,7 @@ public class DistAz {
      c getAz()    => Azimuth from station to event in degrees
      c getBaz()   => Back Azimuth from event to station in degrees
      */
-    public DistAz(Station sta, EventAccessOperations ev){
+    public DistAz(StationImpl sta, CacheEvent ev){
         this(sta.getLocation(), getLoc(ev));
     }
 
@@ -45,7 +23,7 @@ public class DistAz {
      c getAz()    => Azimuth from station to origin in degrees
      c getBaz()   => Back Azimuth from origin to station in degrees
      */
-    public DistAz(Station sta, Origin origin){
+    public DistAz(StationImpl sta, OriginImpl origin){
         this(sta.getLocation(), getLoc(origin));
     }
 
@@ -54,7 +32,7 @@ public class DistAz {
      c getAz()    => Azimuth from site to event in degrees
      c getBaz()   => Back Azimuth from event to site in degrees
      */
-    public DistAz(Site site, EventAccessOperations ev){
+    public DistAz(SiteImpl site, CacheEvent ev){
         this(site.getLocation(), getLoc(ev));
     }
 
@@ -63,7 +41,7 @@ public class DistAz {
      c getAz()    => Azimuth from site to origin in degrees
      c getBaz()   => Back Azimuth from origin to site in degrees
      */
-    public DistAz(Site site, Origin origin){
+    public DistAz(SiteImpl site, OriginImpl origin){
         this(site.getLocation(), getLoc(origin));
     }
 
@@ -72,7 +50,7 @@ public class DistAz {
      c getAz()    => Azimuth from channel to event in degrees
      c getBaz()   => Back Azimuth from event to channel in degrees
      */
-    public DistAz(Channel chan, EventAccessOperations ev){
+    public DistAz(ChannelImpl chan, CacheEvent ev){
         this(chan.getSite(), ev);
     }
 
@@ -81,7 +59,7 @@ public class DistAz {
      c getAz()    => Azimuth from channel to origin in degrees
      c getBaz()   => Back Azimuth from origin to channel in degrees
      */
-    public DistAz(Channel chan, Origin origin){
+    public DistAz(ChannelImpl chan, OriginImpl origin){
         this(chan.getSite().getLocation(), getLoc(origin));
     }
 
@@ -243,11 +221,11 @@ public class DistAz {
         return (int)(bits^(bits>>>32));
     }
 
-    private static Location getLoc(EventAccessOperations ev){
+    private static Location getLoc(CacheEvent ev){
         return getLoc(EventUtil.extractOrigin(ev));
     }
 
-    private static Location getLoc(Origin ev){
+    private static Location getLoc(OriginImpl ev){
         return ev.getLocation();
     }
 

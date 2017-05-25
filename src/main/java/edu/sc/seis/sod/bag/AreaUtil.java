@@ -3,7 +3,7 @@
  * 
  * @author Created by Omnicore CodeGuide
  */
-package edu.sc.seis.fissuresUtil.bag;
+package edu.sc.seis.sod.bag;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,28 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import edu.iris.Fissures.Area;
-import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.LocationType;
-import edu.iris.Fissures.PointDistanceArea;
-import edu.iris.Fissures.Quantity;
-import edu.iris.Fissures.model.BoxAreaImpl;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.sod.model.common.Area;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.GlobalAreaImpl;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.LocationType;
+import edu.sc.seis.sod.model.common.PointDistanceAreaImpl;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class AreaUtil {
 
-    public static BoxArea makeContainingBox(Area a) {
-        if(a instanceof BoxArea) {
-            return (BoxArea)a;
-        } else if(a instanceof GlobalArea) {
+    public static BoxAreaImpl makeContainingBox(Area a) {
+        if(a instanceof BoxAreaImpl) {
+            return (BoxAreaImpl)a;
+        } else if(a instanceof GlobalAreaImpl) {
             return new BoxAreaImpl(-90, 90, -180, 180);
-        } else if(a instanceof PointDistanceArea) {
-            PointDistanceArea pda = (PointDistanceArea)a;
+        } else if(a instanceof PointDistanceAreaImpl) {
+            PointDistanceAreaImpl pda = (PointDistanceAreaImpl)a;
             float maxDegree = (float)distanceToDegrees(pda.max_distance);
             if (maxDegree >= 180) {return new BoxAreaImpl(-90, 90, -180, 180);}
             float maxLong = wrapLong((float)SphericalCoords.lonFor(pda.latitude, pda.longitude, maxDegree,  90));
@@ -70,18 +68,18 @@ public class AreaUtil {
     }
         
     public static boolean inArea(Area area, double latitude, double longitude) {
-        if(area instanceof GlobalArea) {
+        if(area instanceof GlobalAreaImpl) {
             return true;
-        } else if(area instanceof BoxArea) {
-            return inBox((BoxArea)area, latitude, longitude);
-        } else if(area instanceof PointDistanceArea) {
-            return inDonut((PointDistanceArea)area, latitude, longitude);
+        } else if(area instanceof BoxAreaImpl) {
+            return inBox((BoxAreaImpl)area, latitude, longitude);
+        } else if(area instanceof PointDistanceAreaImpl) {
+            return inDonut((PointDistanceAreaImpl)area, latitude, longitude);
         }
         throw new RuntimeException("Unknown Area type: "
                 + area.getClass().getName());
     }
 
-    private static boolean inDonut(PointDistanceArea a, double latitude, double longitude) {
+    private static boolean inDonut(PointDistanceAreaImpl a, double latitude, double longitude) {
         DistAz distAz = new DistAz(a.latitude,
                                    a.longitude,
                                    latitude,
@@ -91,14 +89,14 @@ public class AreaUtil {
         return (distAz.getDelta() >= minDegree && distAz.getDelta() <= maxDegree);
     }
 
-    private static double distanceToDegrees(Quantity minDist) {
-        if(((UnitImpl)minDist.the_units).isConvertableTo(UnitImpl.DEGREE)) {
+    private static double distanceToDegrees(QuantityImpl minDist) {
+        if(((UnitImpl)minDist.getUnit()).isConvertableTo(UnitImpl.DEGREE)) {
             return ((QuantityImpl)minDist).getValue(UnitImpl.DEGREE);
         }
         return DistAz.kilometersToDegrees(((QuantityImpl)minDist).getValue(UnitImpl.KILOMETER));
     }
 
-    private static boolean inBox(BoxArea box, double latitude, double longitude) {
+    private static boolean inBox(BoxAreaImpl box, double latitude, double longitude) {
         return (latitude >= box.min_latitude
                 && latitude <= box.max_latitude
                 && longitude % 360 >= box.min_longitude % 360 && longitude % 360 <= box.max_longitude % 360);

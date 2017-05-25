@@ -1,7 +1,7 @@
-package edu.sc.seis.fissuresUtil.bag;
+package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 
 public class Arithmatic {

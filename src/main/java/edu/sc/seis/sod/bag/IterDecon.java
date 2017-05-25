@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.bag;
 
-import edu.sc.seis.fissuresUtil.bag.ZeroPowerException;
-import edu.sc.seis.fissuresUtil.freq.Cmplx;
 
 
 /**

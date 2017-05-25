@@ -3,23 +3,22 @@ package edu.sc.seis.sod.bag;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.OrientationRange;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.OrientationRangeImpl;
 
 /**
  * @author groves Created on Oct 7, 2004
  */
 public class OrientationUtil {
 
-    public static List<ChannelImpl> inOrientation(OrientationRange orient,
+    public static List<ChannelImpl> inOrientation(OrientationRangeImpl orient,
                                           List<ChannelImpl> chans) {
         double degDist = QuantityImpl.createQuantityImpl(orient.angular_distance)
-                .convertTo(UnitImpl.DEGREE).value;
+                .convertTo(UnitImpl.DEGREE).getValue();
         List results = new ArrayList();
         for(ChannelImpl chan : chans) {
             Orientation chanOrient = chan.getOrientation();
@@ -73,7 +72,7 @@ public class OrientationUtil {
         return new Orientation(-1 * orient.dip, (orient.azimuth + 180) % 360);
     }
 
-    public static ChannelImpl flip(Channel chan) {
+    public static ChannelImpl flip(ChannelImpl chan) {
         return new ChannelImpl(chan.get_id(),
                                chan.getName(),
                                flip(chan.getOrientation()),

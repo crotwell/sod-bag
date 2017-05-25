@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class NegativeSensitivity {
 
@@ -13,7 +13,7 @@ public class NegativeSensitivity {
     }
     
     public static boolean check(QuantityImpl sensitivity) {
-        return sensitivity.value < 0;
+        return sensitivity.getValue() < 0;
     }
 
 	public static ChannelSeismogram correct(ChannelImpl chan,

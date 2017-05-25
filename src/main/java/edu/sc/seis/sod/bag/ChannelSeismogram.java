@@ -1,12 +1,12 @@
 package edu.sc.seis.sod.bag;
 
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
-import edu.iris.Fissures.network.ChannelImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class ChannelSeismogram {
 
-	public ChannelSeismogram(ChannelImpl chan, LocalSeismogram seis, Sensitivity sensitivity) {
+	public ChannelSeismogram(ChannelImpl chan, LocalSeismogramImpl seis, Sensitivity sensitivity) {
 		this.seis = seis;
 		this.chan = chan;
 		this.sensitivity = sensitivity;
@@ -16,7 +16,7 @@ public class ChannelSeismogram {
 		return chan;
 	}
 
-	public LocalSeismogram getSeismogram() {
+	public LocalSeismogramImpl getSeismogram() {
 		return seis;
 	}
 
@@ -27,7 +27,7 @@ public class ChannelSeismogram {
 		return sensitivity;
 	}
 
-	LocalSeismogram seis;
+	LocalSeismogramImpl seis;
 
 	ChannelImpl chan;
 

@@ -8,10 +8,10 @@ package edu.sc.seis.sod.bag;
 
 import java.io.Serializable;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
 
 public class LongShortTrigger implements Serializable {
 

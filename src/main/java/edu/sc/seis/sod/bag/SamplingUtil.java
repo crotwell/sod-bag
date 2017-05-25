@@ -3,11 +3,11 @@ package edu.sc.seis.sod.bag;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.Sampling;
-import edu.iris.Fissures.IfNetwork.SamplingRange;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.SamplingRangeImpl;
 
 
 /**
@@ -17,7 +17,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 public class SamplingUtil {
 
 
-    public static List<ChannelImpl> inSampling(SamplingRange sampling, List<ChannelImpl> chans) {
+    public static List<ChannelImpl> inSampling(SamplingRangeImpl sampling, List<ChannelImpl> chans) {
         double minSPS = getSamplesPerSecond(sampling.min);
         double maxSPS = getSamplesPerSecond(sampling.max);
         List results = new ArrayList();
@@ -31,8 +31,8 @@ public class SamplingUtil {
         
     }
 
-    private static double getSamplesPerSecond(Sampling sampling) {
-        double numSeconds = new TimeInterval(sampling.interval).convertTo(UnitImpl.SECOND).value;
+    private static double getSamplesPerSecond(SamplingImpl sampling) {
+        double numSeconds = new TimeInterval(sampling.interval).convertTo(UnitImpl.SECOND).getValue();
         return sampling.numPoints / numSeconds;
     }
 }

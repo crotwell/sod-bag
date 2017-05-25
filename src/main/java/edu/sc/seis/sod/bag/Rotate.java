@@ -2,11 +2,11 @@ package edu.sc.seis.sod.bag;
 
 import java.awt.geom.AffineTransform;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
 
 /**
  * Rotate.java Created: Sun Dec 15 13:43:21 2002
