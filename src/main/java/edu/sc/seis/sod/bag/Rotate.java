@@ -2,10 +2,12 @@ package edu.sc.seis.sod.bag;
 
 import java.awt.geom.AffineTransform;
 
+import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
 
 /**
@@ -93,12 +95,7 @@ public class Rotate  {
     }
     
     public static ChannelId replaceChannelOrientation(ChannelId chanId, String orientation) {
-        return new ChannelId(chanId.network_id,
-                             chanId.station_code,
-                             chanId.site_code,
-                             chanId.channel_code.substring(0, 2)
-                                     + orientation,
-                                     chanId.begin_time);
+        return ChannelGroup.replaceChannelOrientation(chanId, orientation);
     }
 
     /**

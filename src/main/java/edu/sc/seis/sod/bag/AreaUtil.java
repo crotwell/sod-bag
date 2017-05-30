@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.model.common.Area;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationType;
