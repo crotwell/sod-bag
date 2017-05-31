@@ -6,7 +6,6 @@ import java.util.List;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.EncodedData;
@@ -83,10 +82,10 @@ public class Cut implements LocalSeismogramFunction {
             System.arraycopy(inD, beginIndex, outD, 0, endIndex - beginIndex+1);
             outSeis = new LocalSeismogramImpl(seis, outD);
         } // end of else
-        outSeis.begin_time = new Time(seis.getBeginTime()
+        outSeis.begin_time = seis.getBeginTime()
                 .add((TimeInterval)seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(beginIndex)));
+                        .multiplyBy(beginIndex));
         return outSeis;
     }
 
@@ -215,10 +214,10 @@ public class Cut implements LocalSeismogramFunction {
         TimeSeriesDataSel ds = new TimeSeriesDataSel();
         ds.encoded_values((EncodedData[])outData.toArray(new EncodedData[outData.size()]));
         LocalSeismogramImpl outSeis = new LocalSeismogramImpl(seis, ds);
-        outSeis.begin_time = new Time(seis.getBeginTime()
+        outSeis.begin_time = seis.getBeginTime()
                 .add((TimeInterval)seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(firstUsedPoint)));
+                        .multiplyBy(firstUsedPoint));
         outSeis.num_points = pointsInNewSeis;
         return outSeis;
     }

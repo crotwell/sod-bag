@@ -6,7 +6,6 @@ import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import junit.framework.TestCase;
 
@@ -20,7 +19,7 @@ public class CutTest extends TestCase {
 
     LocalSeismogramImpl seis;
 
-    Time time = new Time("20001231T235959.000Z");
+    MicroSecondDate time = new MicroSecondDate("20001231T235959.000Z");
 
     int[] data;
     static {

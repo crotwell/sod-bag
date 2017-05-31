@@ -3,7 +3,6 @@ package edu.sc.seis.sod.bag;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -16,7 +15,7 @@ public class DecimateTest extends TestCase {
         int factor = 5;
         LocalSeismogramImpl seis = MockSeismogram.createTestData("test",
                                                                            new int[100],
-                                                                           new Time(ClockUtil.now()),
+                                                                           ClockUtil.now(),
                                                                            MockChannelId.createVerticalChanId(),
                                                                            new SamplingImpl(20,
                                                                                             new TimeInterval(1,
