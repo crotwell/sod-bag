@@ -7,20 +7,22 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseFilterType;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Coefficients;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
+import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseList;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseListElement;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLTagNames;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Unit;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.CoefficientFilter;
-import edu.sc.seis.sod.model.station.Filter;
-import edu.sc.seis.sod.model.station.FilterType;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.ListFilter;
-import edu.sc.seis.sod.model.station.PoleZeroFilter;
-import edu.sc.seis.sod.model.station.Response;
-import edu.sc.seis.sod.model.station.Sensitivity;
-import edu.sc.seis.sod.model.station.Stage;
-import edu.sc.seis.sod.model.station.TransferType;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 
 /**
  * ResponsePrint.java
@@ -38,21 +40,17 @@ public class ResponsePrint {
     public ResponsePrint() {}
 
     /**
-     * Prints an instrumentation object in resp format. Declared statically so
+     * Prints an response object in resp format. Declared statically so
      * can just be called with edu.iris.dmc.Client.printResponse( ChannelId,
      * Instrumentation );
      * 
      * @param chanId
      *            channel id for the response
-     * @param inst
+     * @param response
      *            object containing the entire response
+     * @param effective_time
+     *            time range for this response, usually the channel effective time
      */
-    public static String printResponse(ChannelId chanId, Instrumentation inst) {
-        TimeRange effective_time = inst.effective_time;
-        Response response = inst.the_response;
-        return printResponse(chanId, response, effective_time);
-    }
-
     public static String printResponse(ChannelId chanId,
                                        Response response,
                                        TimeRange effective_time) {
@@ -61,7 +59,7 @@ public class ResponsePrint {
         sdf.setTimeZone(gmt);
         MicroSecondDate stime = effective_time.getBeginTime();
         MicroSecondDate etime = effective_time.getEndTime();
-        Sensitivity sensitivity = response.the_sensitivity;
+        InstrumentSensitivity sensitivity = response.getInstrumentSensitivity();
         StringBuffer r = new StringBuffer();
         r.append("\n#");
         r.append("\n###################################################################################");
@@ -73,16 +71,14 @@ public class ResponsePrint {
         r.append("\nB052F04     Channel:       " + chanId.channel_code);
         r.append("\nB052F22     Start date:    " + sdf.format(stime));
         r.append("\nB052F23     End date:      " + sdf.format(etime));
-        for(int i = 0; i < response.stages.length; i++) {
+        for(int i = 0; i < response.getResponseStageList().size(); i++) {
             int stageNum = i + 1;
-            Stage stage = response.stages[i];
-            if(stage.filters.length > 0) {
-                r.append(printB53(chanId, effective_time, stageNum, stage));
-                r.append(printB54(chanId, effective_time, stageNum, stage));
-                r.append(printB55(chanId, effective_time, stageNum, stage));
-                r.append(printB57(chanId, effective_time, stageNum, stage));
-                r.append(printB58(chanId, effective_time, stageNum, stage));
-            }
+            ResponseStage stage = response.getResponseStageList().get(i);
+            r.append(printB53(chanId, effective_time, stageNum, stage));
+            r.append(printB54(chanId, effective_time, stageNum, stage));
+            r.append(printB55(chanId, effective_time, stageNum, stage));
+            r.append(printB57(chanId, effective_time, stageNum, stage));
+            r.append(printB58(chanId, effective_time, stageNum, stage));
         }
         r.append(printSensitivity(chanId, sensitivity, effective_time));
         // System.out.println( r.toString() );
@@ -141,21 +137,19 @@ public class ResponsePrint {
     public static String printB53(ChannelId id,
                                   TimeRange effective_time,
                                   int stageNum,
-                                  Stage stage) {
+                                  ResponseStage stage) {
         // Not a poles and zeros filter
-        Filter filter = stage.filters[0];
-        if(filter.discriminator().value() != FilterType._POLEZERO)
+        BaseFilterType filter = stage.getResponseItem();
+        if( ! (filter instanceof PolesZeros))
             return "";
+        PolesZeros pz = (PolesZeros)filter;
         String transferType = "";
-        if(stage.type == TransferType.LAPLACE)
+        if(pz.getPzTransferType().equals(StationXMLTagNames.POLEZERO_LAPLACE_RAD_PER_SEC))
             transferType = "A";
-        else if(stage.type == TransferType.ANALOG)
+        else if(pz.getPzTransferType().equals(StationXMLTagNames.POLEZERO_LAPLACE_HERTZ))
             transferType = "B";
-        else if(stage.type == TransferType.COMPOSITE)
-            transferType = "C";
-        else if(stage.type == TransferType.DIGITAL)
+        else if(pz.getPzTransferType().equals(StationXMLTagNames.POLEZERO_DIGITAL))
             transferType = "D";
-        PoleZeroFilter pz = filter.pole_zero_filter();
         java.text.DecimalFormat f = new java.text.DecimalFormat("+0.00000E00;-0.00000E00", new DecimalFormatSymbols(Locale.US));
         java.text.DecimalFormat ind = new java.text.DecimalFormat(" 0", new DecimalFormatSymbols(Locale.US));
         StringBuffer s = new StringBuffer("\n#");
@@ -166,61 +160,53 @@ public class ResponsePrint {
                 + transferType);
         s.append("\nB053F04     Stage sequence number:             " + stageNum);
         s.append("\nB053F05     Response in units lookup:          "
-                + formatUnit(stage.input_units));
+                + formatUnit(pz.getInputUnits()));
         s.append("\nB053F06     Response out units lookup:         "
-                + formatUnit(stage.output_units));
+                + formatUnit(pz.getOutputUnits()));
         // careful here as normalization is optional in stages,
         // and may be a zero length array
         s.append("\nB053F07     AO normalization factor:           ");
-        if(stage.the_normalization.length == 1) {
-            s.append(f.format(stage.the_normalization[0].ao_normalization_factor));
-        } else {
-            s.append("1.0");
-        }
+        s.append(f.format(pz.getNormalizationFactor()));
         s.append("\nB053F08     Normalization frequency:           ");
-        if(stage.the_normalization.length == 1) {
-            s.append(f.format(stage.the_normalization[0].normalization_freq));
-        } else {
-            s.append("1.0");
-        }
+            s.append(f.format(pz.getNormalizationFreq()));
         s.append("\nB053F09     Number of zeroes:                  "
-                + pz.zeros.length);
+                + pz.getZeroList().size());
         s.append("\nB053F14     Number of poles:                   "
-                + pz.poles.length);
-        if(pz.zeros.length > 0) {
+                + pz.getPoleList().size());
+        if(pz.getZeroList().size() > 0) {
             s.append("\n#              Complex zeroes:");
             s.append("\n#               i  real          imag          real_error    imag_error");
-            for(int k = 0; k < pz.zeros.length; k++) {
+            for(int k = 0; k < pz.getZeroList().size(); k++) {
                 if(k < 10)
                     s.append("\nB053F10-13      " + k + "  "
-                            + f.format(pz.zeros[k].real) + "  "
-                            + f.format(pz.zeros[k].imaginary) + "  "
-                            + f.format(pz.zeros[k].real_error) + "  "
-                            + f.format(pz.zeros[k].imaginary_error));
+                            + f.format(pz.getZeroList().get(k).getReal()) + "  "
+                            + f.format(pz.getZeroList().get(k).getImaginary()) + "  "
+                            + f.format(pz.getZeroList().get(k).getRealWithError().getPlusError()) + "  "
+                            + f.format(pz.getZeroList().get(k).getImaginaryWithError().getPlusError()));
                 else
                     s.append("\nB053F10-13     " + k + "  "
-                            + f.format(pz.zeros[k].real) + "  "
-                            + f.format(pz.zeros[k].imaginary) + "  "
-                            + f.format(pz.zeros[k].real_error) + "  "
-                            + f.format(pz.zeros[k].imaginary_error));
+                            + f.format(pz.getZeroList().get(k).getReal()) + "  "
+                            + f.format(pz.getZeroList().get(k).getImaginary()) + "  "
+                            + f.format(pz.getZeroList().get(k).getRealWithError().getPlusError()) + "  "
+                            + f.format(pz.getZeroList().get(k).getImaginaryWithError().getPlusError()));
             }
         }
-        if(pz.poles.length > 0) {
+        if(pz.getPoleList().size() > 0) {
             s.append("\n#              Complex poles:");
             s.append("\n#               i  real          imag          real_error    imag_error");
-            for(int k = 0; k < pz.poles.length; k++) {
+            for(int k = 0; k < pz.getPoleList().size(); k++) {
                 if(k < 10)
                     s.append("\nB053F15-18      " + k + "  "
-                            + f.format(pz.poles[k].real) + "  "
-                            + f.format(pz.poles[k].imaginary) + "  "
-                            + f.format(pz.poles[k].real_error) + "  "
-                            + f.format(pz.poles[k].imaginary_error));
+                            + f.format(pz.getPoleList().get(k).getReal()) + "  "
+                            + f.format(pz.getPoleList().get(k).getImaginary()) + "  "
+                            + f.format(pz.getPoleList().get(k).getRealWithError().getPlusError()) + "  "
+                            + f.format(pz.getPoleList().get(k).getImaginaryWithError().getPlusError()));
                 else
                     s.append("\nB053F15-18     " + k + "  "
-                            + f.format(pz.poles[k].real) + "  "
-                            + f.format(pz.poles[k].imaginary) + "  "
-                            + f.format(pz.poles[k].real_error) + "  "
-                            + f.format(pz.poles[k].imaginary_error));
+                            + f.format(pz.getPoleList().get(k).getReal()) + "  "
+                            + f.format(pz.getPoleList().get(k).getImaginary()) + "  "
+                            + f.format(pz.getPoleList().get(k).getRealWithError().getPlusError()) + "  "
+                            + f.format(pz.getPoleList().get(k).getImaginaryWithError().getPlusError()));
             }
         }
         s.append("\n#");
@@ -242,20 +228,20 @@ public class ResponsePrint {
     public static String printB54(ChannelId id,
                                   TimeRange effective_time,
                                   int stageNum,
-                                  Stage stage) {
-        // Not a poles and zeros filter
-        Filter filter = stage.filters[0];
-        if(filter.discriminator().value() != FilterType._COEFFICIENT)
+                                  ResponseStage stage) {
+        // Check if a coefficients stage
+        BaseFilterType filter = stage.getResponseItem();
+        if( ! (filter instanceof Coefficients))
             return "";
+        Coefficients c = (Coefficients)filter;
         StringBuffer s = new StringBuffer("\n#");
         String transferType = "";
-        if(stage.type == TransferType.ANALOG)
+        if(c.getCfTransferType().equals(StationXMLTagNames.COEFFICIENT_ANALOG_RAD_PER_SEC))
             transferType = "A";
-        else if(stage.type == TransferType.COMPOSITE)
-            transferType = "C";
-        else if(stage.type == TransferType.DIGITAL)
+        else if(c.getCfTransferType().equals(StationXMLTagNames.COEFFICIENT_ANALOG_HERTZ))
+            transferType = "B";
+        else if(c.getCfTransferType().equals(StationXMLTagNames.COEFFICIENT_DIGITAL))
             transferType = "D";
-        CoefficientFilter c = filter.coeff_filter();
         s.append("\n#                   +-----------------------------------+");
         s.append("\n#                   |       Response (Coefficients)     |\n");
         s.append(printHeader(id, effective_time));
@@ -263,41 +249,41 @@ public class ResponsePrint {
                 + transferType);
         s.append("\nB054F04     Stage sequence number:             " + stageNum);
         s.append("\nB054F05     Response in units lookup:          "
-                + formatUnit(stage.input_units));
+                + formatUnit(c.getInputUnits()));
         s.append("\nB054F06     Response out units lookup:         "
-                + formatUnit(stage.output_units));
+                + formatUnit(c.getOutputUnits()));
         s.append("\nB054F07     Number of numerators:              "
-                + c.numerator.length);
+                + c.getNumeratorList().size());
         s.append("\nB054F10     Number of denominators:            "
-                + c.denominator.length);
+                + c.getDenominatorList().size());
         s.append("\n#");
         java.text.DecimalFormat f = new java.text.DecimalFormat("+0.00000E00;-0.00000E00", new DecimalFormatSymbols(Locale.US));
-        if(c.numerator.length > 0) {
+        if(c.getNumeratorList().size() > 0) {
             s.append("\n#              Numerator coefficients:");
             s.append("\n#               i  coefficient   error");
-            for(int k = 0; k < c.numerator.length; k++) {
+            for(int k = 0; k < c.getNumeratorList().size(); k++) {
                 if(k < 10)
                     s.append("\nB054F08-09      " + k + "  "
-                            + f.format(c.numerator[k].value) + "  "
-                            + f.format(c.numerator[k].error));
+                            + f.format(c.getNumeratorList().get(k).getValue()) + "  "
+                            + f.format(c.getNumeratorList().get(k).getPlusError()));
                 else
                     s.append("\nB054F08-09     " + k + "  "
-                            + f.format(c.numerator[k].value) + "  "
-                            + f.format(c.numerator[k].error));
+                            + f.format(c.getNumeratorList().get(k).getValue()) + "  "
+                            + f.format(c.getNumeratorList().get(k).getPlusError()));
             }
         }
-        if(c.denominator.length > 0) {
+        if(c.getDenominatorList().size() > 0) {
             s.append("\n#              Denominator coefficients:");
             s.append("\n#               i  coefficient   error");
-            for(int k = 0; k < c.denominator.length; k++) {
+            for(int k = 0; k < c.getDenominatorList().size(); k++) {
                 if(k < 10)
                     s.append("\nB054F11-12      " + k + "  "
-                            + f.format(c.denominator[k].value) + "  "
-                            + f.format(c.denominator[k].error));
+                            + f.format(c.getDenominatorList().get(k).getValue()) + "  "
+                            + f.format(c.getDenominatorList().get(k).getPlusError()));
                 else
                     s.append("\nB054F11-12     " + k + "  "
-                            + f.format(c.denominator[k].value) + "  "
-                            + f.format(c.denominator[k].error));
+                            + f.format(c.getDenominatorList().get(k).getValue()) + "  "
+                            + f.format(c.getDenominatorList().get(k).getPlusError()));
             }
         }
         s.append("\n#");
@@ -319,39 +305,40 @@ public class ResponsePrint {
     public static String printB55(ChannelId id,
                                   TimeRange effective_time,
                                   int stageNum,
-                                  Stage stage) {
-        // Not a List filter
-        Filter filter = stage.filters[0];
-        if(filter.discriminator().value() != FilterType._LIST)
+                                  ResponseStage stage) {
+        // Check if a list stage
+        BaseFilterType filter = stage.getResponseItem();
+        if( ! (filter instanceof ResponseList))
             return "";
+        ResponseList c = (ResponseList)filter;
         StringBuffer s = new StringBuffer("\n#");
-        ListFilter c = filter.list_filter();
         s.append("\n#                   +-----------------------------------+");
         s.append("\n#                   |       Response List               |\n");
         s.append(printHeader(id, effective_time));
         s.append("\nB055F03     Stage sequence number:             " + stageNum);
         s.append("\nB055F04     Response in units lookup:          "
-                + formatUnit(stage.input_units));
+                + formatUnit(c.getInputUnits()));
         s.append("\nB055F05     Response out units lookup:         "
-                + formatUnit(stage.output_units));
+                + formatUnit(c.getOutputUnits()));
         s.append("\nB055F06     Number of responses listed:        "
-                + c.frequency.length);
+                + c.getResponseElements().size());
         s.append("\n#");
         java.text.DecimalFormat f = new java.text.DecimalFormat("+0.00000E00;-0.00000E00", new DecimalFormatSymbols(Locale.US));
         java.text.DecimalFormat ind = new java.text.DecimalFormat(" 0", new DecimalFormatSymbols(Locale.US));
-        if(c.frequency.length > 0) {
+        if(c.getResponseElements().size() > 0) {
             s.append("\n#              i  frequency     amplitude     amplitude err phase angle   phase err");
-            for(int k = 0; k < c.frequency.length; k++) {
+            for(int k = 0; k < c.getResponseElements().size(); k++) {
+                ResponseListElement rle = c.getResponseElements().get(k);
                 if(k < 10) {
                     s.append("\nB055F07-11      " + k);
                 } else {
                     s.append("\nB055F07-11     " + k);
                 }
-                s.append("  " + f.format(c.frequency[k]));
-                s.append("  " + f.format(c.amplitude[k]));
-                s.append("  " + f.format(c.amplitude_error[k]));
-                s.append("  " + f.format(c.phase[k]));
-                s.append("  " + f.format(c.phase_error[k]));
+                s.append("  " + f.format(rle.getFrequency()));
+                s.append("  " + f.format(rle.getAmplitude().getValue()));
+                s.append("  " + f.format(rle.getAmplitude().getPlusError()));
+                s.append("  " + f.format(rle.getPhase().getValue()));
+                s.append("  " + f.format(rle.getPhase().getPlusError()));
             }
         }
         s.append("\n#");
@@ -373,8 +360,8 @@ public class ResponsePrint {
     public static String printB57(ChannelId id,
                                   TimeRange effective_time,
                                   int stageNum,
-                                  Stage stage) {
-        if(stage.the_decimation.length == 0)
+                                  ResponseStage stage) {
+        if(stage.getDecimation() == null)
             return "";
         java.text.DecimalFormat f = new java.text.DecimalFormat("+0.0000E00;-0.0000E00", new DecimalFormatSymbols(Locale.US));
         StringBuffer s = new StringBuffer("#\n");
@@ -383,15 +370,15 @@ public class ResponsePrint {
         s.append(printHeader(id, effective_time));
         s.append("B057F03     Stage sequence number:             " + stageNum);
         s.append("\nB057F04     Input sample rate (HZ):            "
-                + f.format(stage.the_decimation[0].input_rate.numPoints));
+                + f.format(stage.getDecimation().getInputSampleRate()));
         s.append("\nB057F05     Decimation factor:                 "
-                + stage.the_decimation[0].factor);
+                + stage.getDecimation().getFactor());
         s.append("\nB057F06     Decimation offset:                 "
-                + stage.the_decimation[0].offset);
+                + stage.getDecimation().getOffset());
         s.append("\nB057F07     Estimated delay (seconds):         "
-                + f.format(stage.the_decimation[0].estimated_delay.getValue()));
+                + f.format(stage.getDecimation().getDelay()));
         s.append("\nB057F08     Correction applied (seconds):      "
-                + f.format(stage.the_decimation[0].correction_applied.getValue()));
+                + f.format(stage.getDecimation().getCorrection()));
         s.append("\n#");
         return s.toString();
     }
@@ -411,7 +398,7 @@ public class ResponsePrint {
     public static String printB58(ChannelId id,
                                   TimeRange effective_time,
                                   int stageNum,
-                                  Stage stage) {
+                                  ResponseStage stage) {
         java.text.DecimalFormat f = new java.text.DecimalFormat("+0.00000E00;-0.00000E00", new DecimalFormatSymbols(Locale.US));
         StringBuffer s = new StringBuffer("#\n");
         s.append("#                   +-----------------------------------+\n");
@@ -419,9 +406,9 @@ public class ResponsePrint {
         s.append(printHeader(id, effective_time));
         s.append("B058F03     Stage sequence number:             " + stageNum);
         s.append("\nB058F04     Sensitivity:                       "
-                + f.format(stage.the_gain.gain_factor));
+                + f.format(stage.getStageSensitivity().getSensitivityValue()));
         s.append("\nB058F05     Frequency of sensitivity:          "
-                + f.format(stage.the_gain.frequency));
+                + f.format(stage.getStageSensitivity().getFrequency()));
         s.append("\nB058F06     Number of calibrations:            0\n");
         return s.toString();
     }
@@ -434,14 +421,14 @@ public class ResponsePrint {
      * @param inst
      *            the entire instrument response
      */
-    public static String printSensitivity(ChannelId id, Instrumentation inst) {
+    public static String printSensitivity(ChannelId id, Response response, TimeRange effectiveTime) {
         return printSensitivity(id,
-                                inst.the_response.the_sensitivity,
-                                inst.effective_time);
+                                response.getInstrumentSensitivity(),
+                                effectiveTime);
     }
 
     public static String printSensitivity(ChannelId id,
-                                          Sensitivity sensitivity,
+                                          InstrumentSensitivity sensitivity,
                                           TimeRange effective_time) {
         StringBuffer s = new StringBuffer("#\n");
         s.append("#                   +-----------------------------------+\n");
@@ -450,30 +437,19 @@ public class ResponsePrint {
         s.append("#\n");
         s.append("B058F03     Stage sequence number:             0");
         s.append("\nB058F04     Sensitivity:                       "
-                + sensitivity.sensitivity_factor);
+                + sensitivity.getSensitivityValue());
         s.append("\nB058F05     Frequency of sensitivity:          "
-                + sensitivity.frequency);
+                + sensitivity.getFrequency());
         s.append("\nB058F06     Number of calibrations:            0\n");
         return s.toString();
     }
 
-    public static String printInstEffectiveTime(Instrumentation inst) {
-        MicroSecondDate stime = inst.effective_time.getBeginTime();
-        MicroSecondDate etime = inst.effective_time.getEndTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSSz");
-        TimeZone gmt = TimeZone.getTimeZone("GMT");
-        sdf.setTimeZone(gmt);
-        StringBuffer s = new StringBuffer("Instrument Effective Time:\n");
-        s.append("  Starttime: " + sdf.format(stime) + "\n");
-        s.append("  Endtime:   " + sdf.format(etime) + "\n");
-        return s.toString();
-    }
-
-    public static String formatUnit(UnitImpl unit) {
+    public static String formatUnit(Unit unit) {
         if(unit == null) {
             return "null";
         }
-        UnitImpl impl = UnitImpl.createUnitImpl(unit);
+        try {
+        UnitImpl impl = StationXMLToFissures.convertUnit(unit);
         Iterator it = unitNames.keySet().iterator();
         while(it.hasNext()) {
             UnitImpl key = (UnitImpl)it.next();
@@ -483,6 +459,10 @@ public class ResponsePrint {
         }
         // no configured name, auto-generate
         return unit.toString();
+        } catch (StationXMLException e) {
+            // oh well
+            return unit.getName();
+        }
     }
     
     public static void addToNameMap(UnitImpl unit, String name) {
