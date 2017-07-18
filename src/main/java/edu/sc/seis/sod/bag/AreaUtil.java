@@ -170,7 +170,7 @@ public class AreaUtil {
             StringTokenizer tokenizer = new StringTokenizer(line);
             float lon = BoxAreaImpl.sanitize(Float.parseFloat(tokenizer.nextToken()));
             float lat = Float.parseFloat(tokenizer.nextToken());
-            out.add(new Location(lat, lon, null, null, LocationType.GEOGRAPHIC));
+            out.add(new Location(lat, lon, null, null));
         }
         return (Location[])out.toArray(new Location[0]);
     }

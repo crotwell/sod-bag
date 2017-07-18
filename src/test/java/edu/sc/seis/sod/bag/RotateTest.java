@@ -67,13 +67,11 @@ public class RotateTest  {
         Location staLoc = new Location(55.3f,
                                        -3.2f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_K);
         Location evtLoc = new Location(36.52f,
                                        71.23f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_K);
         float[][] ans = Rotate.rotateGCP(xSeis, ySeis, staLoc, evtLoc);
         DistAz distAz = new DistAz(staLoc, evtLoc);
         assertEquals(" transverse ",
@@ -98,13 +96,11 @@ public class RotateTest  {
         Location staLoc = new Location(0f,
                                        0f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_K);
         Location evtLoc = new Location(90f,
                                        0f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_Kl);
         LocalSeismogramImpl[] ans = Rotate.rotateGCP(xSeis, xOrient, ySeis, yOrient, staLoc, evtLoc, "T", "R");
         assertEquals(" transverse ",
                      -100 * Math.sqrt(2),
@@ -136,13 +132,11 @@ public class RotateTest  {
         Location staLoc = new Location(0f,
                                        0f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_K);
         Location evtLoc = new Location(0f,
                                        10f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_K,
-                                       null);
+                                       Defaults.ZERO_K);
         float[][] ans = Rotate.rotateGCP(xSeis, ySeis, staLoc, evtLoc);
         assertEquals(" transverse ", 100, ans[0][0], 0.001f);
         assertEquals(" radial ", -100, ans[1][0], 0.001f);
