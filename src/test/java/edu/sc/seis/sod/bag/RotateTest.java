@@ -100,7 +100,7 @@ public class RotateTest  {
         Location evtLoc = new Location(90f,
                                        0f,
                                        Defaults.ZERO_K,
-                                       Defaults.ZERO_Kl);
+                                       Defaults.ZERO_K);
         LocalSeismogramImpl[] ans = Rotate.rotateGCP(xSeis, xOrient, ySeis, yOrient, staLoc, evtLoc, "T", "R");
         assertEquals(" transverse ",
                      -100 * Math.sqrt(2),
