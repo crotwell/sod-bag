@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class BestChannelUtil {
 
@@ -81,38 +81,38 @@ public class BestChannelUtil {
         return bandCodeHeuristic;
     }
 
-    public ChannelImpl getBestVerticalChannel(List<ChannelImpl> inChanList) {
+    public Channel getBestVerticalChannel(List<Channel> inChanList) {
         return getBestChannel(getAllVertical(inChanList));
     }
     
-    public ChannelImpl getBestChannel(List<ChannelImpl> inChanList) {
+    public Channel getBestChannel(List<Channel> inChanList) {
         for (int i = 0; i < siteCodeHeuristic.length; i++) {
-            List<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
-            for (ChannelImpl c : inChanList) {
-                if (c.getSite().get_code().equals(siteCodeHeuristic[i])) {
+            List<Channel> siteChans = new ArrayList<Channel>();
+            for (Channel c : inChanList) {
+                if (c.getLocCode().equals(siteCodeHeuristic[i])) {
                     siteChans.add(c);
                 }
             }
             if (siteChans.size() == 0) {continue;}
             for (int j = 0; j < bandCodeHeuristic.length; j++) {
-                List<ChannelImpl> bandChans = new ArrayList<ChannelImpl>();
-                for (ChannelImpl c : siteChans) {
-                    if (ChannelIdUtil.getBandCode(c.getId()).equals(bandCodeHeuristic[j])) {
+                List<Channel> bandChans = new ArrayList<Channel>();
+                for (Channel c : siteChans) {
+                    if (ChannelIdUtil.getBandCode(c.getCode()).equals(bandCodeHeuristic[j])) {
                         bandChans.add(c);
                     }
                 }
                 if (bandChans.size() == 0) {continue;}
                 for (int k = 0; k < gainCodeHeuristic.length; k++) {
-                    List<ChannelImpl> gainChans = new ArrayList<ChannelImpl>();
-                    for (ChannelImpl c : bandChans) {
-                        if (ChannelIdUtil.getGainCode(c.getId()).equals(gainCodeHeuristic[k])) {
+                    List<Channel> gainChans = new ArrayList<Channel>();
+                    for (Channel c : bandChans) {
+                        if (ChannelIdUtil.getGainCode(c.getCode()).equals(gainCodeHeuristic[k])) {
                             gainChans.add(c);
                         }
                     }
                     if (gainChans.size() == 0) {continue;}
                     for (int m = 0; m < orientationCodeHeuristic.length; m++) {
-                        for (ChannelImpl vChan : gainChans) {
-                            if (ChannelIdUtil.getOrientationCode(vChan.getId()).equals(orientationCodeHeuristic[m])) {
+                        for (Channel vChan : gainChans) {
+                            if (ChannelIdUtil.getOrientationCode(vChan.getCode()).equals(orientationCodeHeuristic[m])) {
                                 return vChan;
                             }
                         }
@@ -127,42 +127,42 @@ public class BestChannelUtil {
         return null;
     }
     
-    public ChannelImpl[] getBestMotionVector(List<ChannelImpl> inChanList) {
+    public Channel[] getBestMotionVector(List<Channel> inChanList) {
         for (int i = 0; i < siteCodeHeuristic.length; i++) {
-            List<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
-            for (ChannelImpl siteChan : inChanList) {
-                if (siteChan.getSite().get_code().equals(siteCodeHeuristic[i])) {
+            List<Channel> siteChans = new ArrayList<Channel>();
+            for (Channel siteChan : inChanList) {
+                if (siteChan.getLocCode().equals(siteCodeHeuristic[i])) {
                     siteChans.add(siteChan);
                 }
             }
             if (siteChans.size() == 0) {continue;}
             for (int j = 0; j < bandCodeHeuristic.length; j++) {
-                List<ChannelImpl> bandChans = new ArrayList<ChannelImpl>();
-                for (ChannelImpl c : siteChans) {
-                    if (ChannelIdUtil.getBandCode(c.getId()).equals(bandCodeHeuristic[j])) {
+                List<Channel> bandChans = new ArrayList<Channel>();
+                for (Channel c : siteChans) {
+                    if (ChannelIdUtil.getBandCode(c.getCode()).equals(bandCodeHeuristic[j])) {
                         bandChans.add(c);
                     }
                 }
                 if (bandChans.size() == 0) {continue;}
                 for (int k = 0; k < gainCodeHeuristic.length; k++) {
-                    List<ChannelImpl> gainChans = new ArrayList<ChannelImpl>();
-                    for (ChannelImpl c : bandChans) {
-                        if (ChannelIdUtil.getGainCode(c.getId()).equals(gainCodeHeuristic[k])) {
+                    List<Channel> gainChans = new ArrayList<Channel>();
+                    for (Channel c : bandChans) {
+                        if (ChannelIdUtil.getGainCode(c.getCode()).equals(gainCodeHeuristic[k])) {
                             gainChans.add(c);
                         }
                     }
                     if (gainChans.size() == 0) {continue;}
-                    List<ChannelImpl> vList = getAllVertical(gainChans);
-                    List<ChannelImpl> hList = getAllHorizontal(gainChans);
+                    List<Channel> vList = getAllVertical(gainChans);
+                    List<Channel> hList = getAllHorizontal(gainChans);
                     for (int m = 0; m < orientationCodeHeuristic.length; m++) {
-                        for (ChannelImpl vChan : vList) {
-                            if (ChannelIdUtil.getOrientationCode(vChan.getId()).equals(orientationCodeHeuristic[m])) {
-                                ChannelImpl[] out = new ChannelImpl[3];
+                        for (Channel vChan : vList) {
+                            if (ChannelIdUtil.getOrientationCode(vChan.getCode()).equals(orientationCodeHeuristic[m])) {
+                                Channel[] out = new Channel[3];
                                 out[0] = vChan;
                                 int found = 1;
                                 for (int n = 0; n < orientationCodeHeuristic.length; n++) {
-                                    for (ChannelImpl hChan : hList) {
-                                        if (ChannelIdUtil.getOrientationCode(hChan.getId()).equals(orientationCodeHeuristic[n])) {                                            if (found == 2) {
+                                    for (Channel hChan : hList) {
+                                        if (ChannelIdUtil.getOrientationCode(hChan.getCode()).equals(orientationCodeHeuristic[n])) {                                            if (found == 2) {
                                                 //might have found the third
                                                 if (arePerpendicular(out[1], hChan)) {
                                                     out[found] = hChan;
@@ -184,9 +184,9 @@ public class BestChannelUtil {
         return null;
     }
 
-    private boolean arePerpendicular(ChannelImpl channel, ChannelImpl hChan) {
-        if (Math.abs(SphericalCoords.distance(channel.getOrientation().dip, channel.getOrientation().azimuth,
-                                     hChan.getOrientation().dip, hChan.getOrientation().azimuth) - 90) < maxDipOffset ) {
+    private boolean arePerpendicular(Channel channel, Channel hChan) {
+        if (Math.abs(SphericalCoords.distance(channel.getDip().getValue(), channel.getAzimuth().getValue(),
+                                     hChan.getDip().getValue(), hChan.getAzimuth().getValue()) - 90) < maxDipOffset ) {
             // with tol of being 90 deg apart
             return true;
         }
@@ -196,88 +196,64 @@ public class BestChannelUtil {
     /**
      * Prunes channels whose effective time does not overlap the given time.
      */
-    public static List<ChannelImpl> pruneChannels(List<ChannelImpl> inChan, MicroSecondDate when) {
-        List<ChannelImpl> out = new ArrayList<ChannelImpl>();
-        for (ChannelImpl c : inChan) {
-            if (when.before(new MicroSecondDate(c.getEndTime()))
-                    && when.after(new MicroSecondDate(c.getBeginTime()))) {
+    public static List<Channel> pruneChannels(List<Channel> inChan, MicroSecondDate when) {
+        List<Channel> out = new ArrayList<Channel>();
+        for (Channel c : inChan) {
+            if (when.before(new MicroSecondDate(c.getEndDateTime()))
+                    && when.after(new MicroSecondDate(c.getStartDateTime()))) {
                 out.add(c);
             }
         }
         return out;
     }
     
-    public List<ChannelImpl> getAllHorizontal(List<ChannelImpl> inChan) {
-        ArrayList<ChannelImpl> onlyHorizontal = new ArrayList<ChannelImpl>();
-        for (ChannelImpl channel : inChan) {
-            if (Math.abs(channel.getOrientation().dip) < maxDipOffset) {
+    public List<Channel> getAllHorizontal(List<Channel> inChan) {
+        ArrayList<Channel> onlyHorizontal = new ArrayList<Channel>();
+        for (Channel channel : inChan) {
+            if (Math.abs(channel.getDip().getValue()) < maxDipOffset) {
                 onlyHorizontal.add(channel);
             }
         }
         return onlyHorizontal;
     }
     
-    public List<ChannelImpl> getAllVertical(List<ChannelImpl> inChan) {
-        ArrayList<ChannelImpl> onlyVertical = new ArrayList<ChannelImpl>();
-        for (ChannelImpl c : inChan) {
-            if (Math.abs(c.getOrientation().dip) > 90 - maxDipOffset) {
+    public List<Channel> getAllVertical(List<Channel> inChan) {
+        ArrayList<Channel> onlyVertical = new ArrayList<Channel>();
+        for (Channel c : inChan) {
+            if (Math.abs(c.getDip().getValue()) > 90 - maxDipOffset) {
                 onlyVertical.add(c);
             }
         }
         return onlyVertical;
     }
     
-    public static List<ChannelImpl> getAllBand(List<ChannelImpl> inChan, String bandCode) {
-        ArrayList<ChannelImpl> out = new ArrayList<ChannelImpl>();
-        for (ChannelImpl channel : inChan) {
-            if (ChannelIdUtil.getBandCode(channel.getId()).equals(bandCode)) {
+    public static List<Channel> getAllBand(List<Channel> inChan, String bandCode) {
+        ArrayList<Channel> out = new ArrayList<Channel>();
+        for (Channel channel : inChan) {
+            if (ChannelIdUtil.getBandCode(channel.getCode()).equals(bandCode)) {
                 out.add(channel);
             }
         }
         return out;
     }
 
-    private static ChannelImpl getChannelForOrientation(ChannelImpl[] group,
-            String orientation, ChannelImpl matchThis) {
-        return getChannel(group, getBand(matchThis), orientation,
-                matchThis.getSite().get_code(), getGain(matchThis));
+    private static Channel getChannelForOrientation(Channel[] group,
+            String orientation, Channel matchThis) {
+        return getChannel(group, ChannelIdUtil.getBandCode(matchThis.getCode()), orientation,
+                matchThis.getLocCode(), ChannelIdUtil.getGainCode(matchThis.getCode()));
     }
 
-    public static String getBand(ChannelImpl chan) {
-        return getBand(chan.get_code());
-    }
-
-    public static String getBand(String channelCode) {
-        return channelCode.substring(0, 1);
-    }
-
-    public static String getGain(ChannelImpl chan) {
-        return getGain(chan.get_code());
-    }
-
-    public static String getGain(String channelCode) {
-        return channelCode.substring(1, 2);
-    }
-
-    public static String getOrientation(ChannelImpl chan) {
-        return getOrientation(chan.get_code());
-    }
-
-    public static String getOrientation(String channelCode) {
-        return channelCode.substring(2, 3);
-    }
-
-    public  ChannelImpl[] getChannels(ChannelImpl[] staChans, String bc) {
+    public  Channel[] getChannels(Channel[] staChans, String bc) {
         List results = new ArrayList();
         for (int i = 0; i < orientationCodeHeuristic.length; i++) {
             String orientation = orientationCodeHeuristic[i];
-            ChannelImpl chan = getChannel(staChans, bc, orientation);
+            Channel chan = getChannel(staChans, bc, orientation);
             if (chan != null) {
                 results.add(chan);
                 for (int j = 0; j < orientationCodeHeuristic.length; j++) {
                     String subOrient = orientationCodeHeuristic[j];
                     if (!subOrient.equals(orientation)) {
-                        ChannelImpl additional = getChannelForOrientation(staChans, subOrient, chan);
+                        Channel additional = getChannelForOrientation(staChans, subOrient, chan);
                         if(additional != null) {
                             results.add(additional);
                         }
@@ -286,12 +262,12 @@ public class BestChannelUtil {
                 break;
             }
         }
-        return (ChannelImpl[])results.toArray(new ChannelImpl[0]);
+        return (Channel[])results.toArray(new Channel[0]);
     }
 
-    public ChannelImpl getChannel(ChannelImpl[] inChan, String bandCode,
+    public Channel getChannel(Channel[] inChan, String bandCode,
             String orientationCode) {
-        ChannelImpl tmpChannel;
+        Channel tmpChannel;
         for (int h = 0; h < siteCodeHeuristic.length; h++) {
             tmpChannel = getChannel(inChan, bandCode, orientationCode,
                     siteCodeHeuristic[h]);
@@ -309,31 +285,31 @@ public class BestChannelUtil {
      * and otherwise just find a channel. Pretty simple, but in many cases it is
      * suffucient.
      */
-    public ChannelImpl getChannel(ChannelImpl[] inChan, String bandCode,
+    public Channel getChannel(Channel[] inChan, String bandCode,
             String orientationCode, String siteCode) {
         for (int i = 0; i < gainCodeHeuristic.length; i++) {
-            ChannelImpl tmp = getChannel(inChan, bandCode, orientationCode,
+            Channel tmp = getChannel(inChan, bandCode, orientationCode,
                     siteCode, gainCodeHeuristic[i]);
             if (tmp != null) { return tmp; } // end of if (tmp != null)
         } // end of for (int i=0; i< gainHeuristic.length; i++)
 
         // can't find one by gain hueristic, just find one
         for (int chanNum = 0; chanNum < inChan.length; chanNum++) {
-            if (inChan[chanNum].get_id().site_code.equals(siteCode)
-                    && inChan[chanNum].get_code().endsWith(orientationCode)
-                    && inChan[chanNum].get_code().startsWith(bandCode)) { return inChan[chanNum]; }
+            if (inChan[chanNum].getLocCode().equals(siteCode)
+                    && inChan[chanNum].getCode().endsWith(orientationCode)
+                    && inChan[chanNum].getCode().startsWith(bandCode)) { return inChan[chanNum]; }
         }
 
         // oh well, return null
         return null;
     }
 
-    public static ChannelImpl getChannel(ChannelImpl[] inChan, String bandCode,
+    public static Channel getChannel(Channel[] inChan, String bandCode,
             String orientationCode, String siteCode, String gainCode) {
         String desiredChannelCode = bandCode + gainCode + orientationCode;
         for (int chanNum = 0; chanNum < inChan.length; chanNum++) {
-            if (inChan[chanNum].getSite().get_code().equals(siteCode)
-                    && inChan[chanNum].get_code().equals(desiredChannelCode)) { return inChan[chanNum]; }
+            if (inChan[chanNum].getLocCode().equals(siteCode)
+                    && inChan[chanNum].getCode().equals(desiredChannelCode)) { return inChan[chanNum]; }
         }
         // oh well, return null
         return null;

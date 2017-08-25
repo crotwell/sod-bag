@@ -27,40 +27,40 @@ public class MotionVectorUtil {
 	throws IncompatibleSeismograms {
 	for (int k=1; k<2; k++) {
 	     
-	    if ( NetworkIdUtil.areEqual(seismograms[0].channel_id.network_id,
-					seismograms[k].channel_id.network_id)) {
+	    if ( NetworkIdUtil.areEqual(seismograms[0].channel_id.getNetworkId(),
+					seismograms[k].channel_id.getNetworkId())) {
 		throw new IncompatibleSeismograms("Networks for 0 and "+k+" are not the same, "
-						  +NetworkIdUtil.toString(seismograms[0].channel_id.network_id)
+						  +NetworkIdUtil.toString(seismograms[0].channel_id.getNetworkId())
 						  +" "
-						  +NetworkIdUtil.toString(seismograms[k].channel_id.network_id));
+						  +NetworkIdUtil.toString(seismograms[k].channel_id.getNetworkId()));
 	    }
 	    
-	    if ( ! seismograms[0].channel_id.station_code.equals(
-								 seismograms[k].channel_id.station_code)) {
+	    if ( ! seismograms[0].channel_id.getStationCode().equals(
+								 seismograms[k].channel_id.getStationCode())) {
 		throw new IncompatibleSeismograms("Station codes for 0 and "+k+" are not the same. "
-						  +seismograms[0].channel_id.station_code
+						  +seismograms[0].channel_id.getStationCode()
 						  +" "
-						  +seismograms[k].channel_id.station_code);
+						  +seismograms[k].channel_id.getStationCode());
 	    }
-	    if ( ! seismograms[0].channel_id.site_code.equals(
-							      seismograms[k].channel_id.site_code)) {
+	    if ( ! seismograms[0].channel_id.getLocCode().equals(
+							      seismograms[k].channel_id.getLocCode())) {
 		throw new IncompatibleSeismograms("Site codes for 0 and "+k+" are not the same. "
-						  +seismograms[0].channel_id.site_code
+						  +seismograms[0].channel_id.getLocCode()
 						  +" "
-						  +seismograms[k].channel_id.site_code);
+						  +seismograms[k].channel_id.getLocCode());
 	    }
-	    if ( ! seismograms[0].channel_id.site_code.equals(
-							      seismograms[k].channel_id.site_code)) {
+	    if ( ! seismograms[0].channel_id.getLocCode().equals(
+							      seismograms[k].channel_id.getLocCode())) {
 		throw new IncompatibleSeismograms("Site codes for 0 and "+k+" are not the same. "
-						  +seismograms[0].channel_id.site_code
+						  +seismograms[0].channel_id.getLocCode()
 						  +" "
-						  +seismograms[k].channel_id.site_code);
+						  +seismograms[k].channel_id.getLocCode());
 	    }
 	    if ( ! seismograms[0].begin_time.equals(seismograms[k].begin_time)) {
 		throw new IncompatibleSeismograms("Site codes for 0 and "+k+" are not the same. "
-						  +seismograms[0].channel_id.site_code
+						  +seismograms[0].channel_id.getLocCode()
 						  +" "
-						  +seismograms[k].channel_id.site_code);
+						  +seismograms[k].channel_id.getLocCode());
 	    }
 	    if ( seismograms[0].num_points != seismograms[k].num_points) {
 		throw new IncompatibleSeismograms("Number of points for 0 and "+k+" are not the same. "

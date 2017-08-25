@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Area;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.DistAz;
@@ -21,7 +22,6 @@ import edu.sc.seis.sod.model.common.LocationType;
 import edu.sc.seis.sod.model.common.PointDistanceAreaImpl;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class AreaUtil {
 
@@ -54,10 +54,10 @@ public class AreaUtil {
         return lon;
     }
 
-    public static List<ChannelImpl> inArea(Area area, List<ChannelImpl> channels) {
-        List<ChannelImpl> out = new ArrayList<ChannelImpl>();
-        for(ChannelImpl chan : channels) {
-            if(inArea(area, chan.getSite().getLocation())) {
+    public static List<Channel> inArea(Area area, List<Channel> channels) {
+        List<Channel> out = new ArrayList<Channel>();
+        for(Channel chan : channels) {
+            if(inArea(area, new Location(chan))) {
                 out.add(chan);
             }
         }

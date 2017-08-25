@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.ZonedDateTime;
+
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.SamplingImpl;
@@ -15,7 +18,7 @@ public class DecimateTest extends TestCase {
         int factor = 5;
         LocalSeismogramImpl seis = MockSeismogram.createTestData("test",
                                                                            new int[100],
-                                                                           ClockUtil.now(),
+                                                                           ZonedDateTime.now(BaseNodeType.TZ_UTC),
                                                                            MockChannelId.createVerticalChanId(),
                                                                            new SamplingImpl(20,
                                                                                             new TimeInterval(1,

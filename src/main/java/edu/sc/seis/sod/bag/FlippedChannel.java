@@ -1,18 +1,18 @@
 package edu.sc.seis.sod.bag;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class FlippedChannel {
-    public static ChannelSeismogram correct(ChannelImpl chan,
+    public static ChannelSeismogram correct(Channel chan,
                                             LocalSeismogramImpl seis) throws FissuresException{
         return correct(chan, seis, null);
     }
 
-    public static ChannelSeismogram correct(ChannelImpl chan,
+    public static ChannelSeismogram correct(Channel chan,
                                             LocalSeismogramImpl seis,
                                             Sensitivity sens)
             throws FissuresException {
@@ -24,17 +24,17 @@ public class FlippedChannel {
         return new ChannelSeismogram(chan, seis, sens);
     }
 
-    public static boolean check(ChannelImpl chan) {
-        return (chan.get_code().charAt(2) == 'Z' && check(OrientationUtil.getUp(),
+    public static boolean check(Channel chan) {
+        return (chan.getCode().charAt(2) == 'Z' && check(OrientationUtil.getUp(),
                                                           chan))
-                || (chan.get_code().charAt(2) == 'N' && check(OrientationUtil.getNorth(),
+                || (chan.getCode().charAt(2) == 'N' && check(OrientationUtil.getNorth(),
                                                               chan))
-                || (chan.get_code().charAt(2) == 'E' && check(OrientationUtil.getEast(),
+                || (chan.getCode().charAt(2) == 'E' && check(OrientationUtil.getEast(),
                                                               chan));
     }
 
-    public static boolean check(Orientation correct, ChannelImpl chan) {
-        return OrientationUtil.angleBetween(correct, chan.getOrientation()) >= 180 - tol;
+    public static boolean check(Orientation correct, Channel chan) {
+        return OrientationUtil.angleBetween(correct, new Orientation(chan)) >= 180 - tol;
     }
 
     private static double tol = 0.01;

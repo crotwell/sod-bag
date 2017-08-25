@@ -64,11 +64,11 @@ public class ResponsePrint {
         r.append("\n#");
         r.append("\n###################################################################################");
         r.append("\n#");
-        r.append("\nB050F03     Station:       " + chanId.station_code);
+        r.append("\nB050F03     Station:       " + chanId.getStationCode());
         r.append("\nB050F16     Network:       "
-                + chanId.network_id.network_code);
-        r.append("\nB052F03     Location:      " + chanId.site_code);
-        r.append("\nB052F04     Channel:       " + chanId.channel_code);
+                + chanId.getNetworkId());
+        r.append("\nB052F03     Location:      " + chanId.getLocCode());
+        r.append("\nB052F04     Channel:       " + chanId.getChannelCode());
         r.append("\nB052F22     Start date:    " + sdf.format(stime));
         r.append("\nB052F23     End date:      " + sdf.format(etime));
         for(int i = 0; i < response.getResponseStageList().size(); i++) {
@@ -95,21 +95,21 @@ public class ResponsePrint {
      */
     public static String printHeader(ChannelId id, TimeRange effective_time) {
         StringBuffer s = new StringBuffer("");
-        s.append("#                   |        " + id.network_id.network_code
+        s.append("#                   |        " + id.getNetworkId()
                 + "  ");
-        if(id.station_code.length() == 5)
-            s.append(id.station_code + " ");
-        if(id.station_code.length() == 4)
-            s.append(id.station_code + "  ");
-        if(id.station_code.length() == 3)
-            s.append(id.station_code + "   ");
-        if(id.station_code.length() == 2)
-            s.append(id.station_code + "    ");
-        if(id.site_code.length() == 1)
-            s.append(id.site_code + "  ");
-        if(id.site_code.length() == 2)
-            s.append(id.site_code + " ");
-        s.append(id.channel_code + "           |\n");
+        if(id.getStationCode().length() == 5)
+            s.append(id.getStationCode() + " ");
+        if(id.getStationCode().length() == 4)
+            s.append(id.getStationCode() + "  ");
+        if(id.getStationCode().length() == 3)
+            s.append(id.getStationCode() + "   ");
+        if(id.getStationCode().length() == 2)
+            s.append(id.getStationCode() + "    ");
+        if(id.getLocCode().length() == 1)
+            s.append(id.getLocCode() + "  ");
+        if(id.getLocCode().length() == 2)
+            s.append(id.getLocCode() + " ");
+        s.append(id.getChannelCode() + "           |\n");
         MicroSecondDate stime = effective_time.getBeginTime();
         MicroSecondDate etime = effective_time.getEndTime();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");

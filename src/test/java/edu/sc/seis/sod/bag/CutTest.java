@@ -1,7 +1,10 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.ZonedDateTime;
+
 import org.apache.log4j.BasicConfigurator;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -19,7 +22,7 @@ public class CutTest extends TestCase {
 
     LocalSeismogramImpl seis;
 
-    MicroSecondDate time = new MicroSecondDate("20001231T235959.000Z");
+    ZonedDateTime time = BaseNodeType.parseISOString("20001231T235959.000Z");
 
     int[] data;
     static {

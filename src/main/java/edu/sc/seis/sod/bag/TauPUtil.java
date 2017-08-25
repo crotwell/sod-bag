@@ -14,12 +14,13 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModel;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 public class TauPUtil {
 
@@ -27,9 +28,16 @@ public class TauPUtil {
         taup_time = new TauP_Time(modelName);
     }
 
-    public List<Arrival> calcTravelTimes(StationImpl station, OriginImpl origin, String[] phaseNames) throws TauModelException {
-        return calcTravelTimes(station.getLocation(), origin, phaseNames);
+    public List<Arrival> calcTravelTimes(Station station, OriginImpl origin, String[] phaseNames) throws TauModelException {
+        return calcTravelTimes(new Location(station),
+                               origin,
+                               phaseNames);
     }
+
+    public List<Arrival> calcTravelTimes(Channel channel, OriginImpl origin, String[] phaseNames) throws TauModelException {
+        return calcTravelTimes(new Location(channel), origin, phaseNames);
+    }
+
 
     public synchronized List<Arrival> calcTravelTimes(Location stationLoc, OriginImpl origin, String[] phaseNames) throws TauModelException {
         QuantityImpl depth = (QuantityImpl)origin.getLocation().depth;

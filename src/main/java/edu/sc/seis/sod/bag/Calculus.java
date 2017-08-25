@@ -1,9 +1,10 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
+
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
@@ -62,8 +63,8 @@ public class Calculus {
 		} // end of else
 		outSeis.y_unit = UnitImpl.divide(UnitImpl
 				.createUnitImpl(outSeis.y_unit), UnitImpl.SECOND);
-		MicroSecondDate begin = outSeis.getBeginTime();
-		begin.add(new TimeInterval(samp.getPeriod().divideBy(2)));
+		ZonedDateTime begin = outSeis.getBeginTime();
+		begin = begin.plus(Duration.ofNanos(Math.round(samp.getPeriod().getValue(UnitImpl.NANOSECOND) / 2)));
 		outSeis.begin_time = begin;
 		return outSeis;
 	}

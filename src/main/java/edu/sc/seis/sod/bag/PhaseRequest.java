@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationUtil;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -15,7 +16,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.EventUtil;
 
@@ -89,14 +89,14 @@ public class PhaseRequest  {
     }
 
     public RequestFilter generateRequest(CacheEvent event,
-                                         ChannelImpl channel) throws Exception {
+                                         Channel channel) throws Exception {
         OriginImpl origin = EventUtil.extractOrigin(event);
 
         synchronized(this) {
             if(prevRequestFilter != null
                     && origin.getOriginTime().equals( prevOriginTime)
                     && LocationUtil.areEqual(origin.getLocation(), prevOriginLoc)
-                    && LocationUtil.areEqual(channel.getSite().getLocation(), prevSiteLoc)) {
+                    && LocationUtil.areSameLocation(channel, prevSiteLoc)) {
                 // don't need to do any work
                 return new RequestFilter(channel.get_id(),
                                          prevRequestFilter.start_time,
@@ -137,7 +137,7 @@ public class PhaseRequest  {
         eDate = eDate.add(eInterval);
         synchronized(this) {
             prevOriginLoc = origin.getLocation();
-            prevSiteLoc = channel.getSite().getLocation();
+            prevSiteLoc = new Location(channel);
             prevOriginTime = origin.getOriginTime();
             prevRequestFilter = new RequestFilter(channel.get_id(),
                                                   bDate,
@@ -148,17 +148,17 @@ public class PhaseRequest  {
                 + " to "
                 + eDate
                 + " for "
-                + StationIdUtil.toStringNoDates(channel.getSite().getStation().get_id()));
+                + StationIdUtil.toStringNoDates(channel.getStation().get_id()));
         return prevRequestFilter;
     }
 
-    private double getArrivalTime(String phase, ChannelImpl chan, OriginImpl origin)
+    private double getArrivalTime(String phase, Channel chan, OriginImpl origin)
             throws TauModelException {
         if(phase.equals(ORIGIN)) {
             return 0;
         }
         String[] phases = {phase};
-        List<Arrival> arrivals = util.calcTravelTimes(chan.getSite().getLocation(),
+        List<Arrival> arrivals = util.calcTravelTimes(new Location(chan),
                                                   origin,
                                                   phases);
         if(arrivals.size() == 0) {

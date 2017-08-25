@@ -4,24 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.OrientationRangeImpl;
 
 /**
  * @author groves Created on Oct 7, 2004
  */
 public class OrientationUtil {
+    
+    public static Orientation of(Channel chan) {
+        return new Orientation(chan.getAzimuth().getValue(), chan.getDip().getValue());
+    }
 
-    public static List<ChannelImpl> inOrientation(OrientationRangeImpl orient,
-                                          List<ChannelImpl> chans) {
+    public static List<Channel> inOrientation(OrientationRangeImpl orient,
+                                          List<Channel> chans) {
         double degDist = QuantityImpl.createQuantityImpl(orient.angular_distance)
                 .convertTo(UnitImpl.DEGREE).getValue();
         List results = new ArrayList();
-        for(ChannelImpl chan : chans) {
-            Orientation chanOrient = chan.getOrientation();
+        for(Channel chan : chans) {
+            Orientation chanOrient = OrientationUtil.of(chan);
             double dist = angleBetween(orient.center, chanOrient);
             if(dist <= degDist) {
                 results.add(chan);
@@ -30,10 +35,19 @@ public class OrientationUtil {
         return results;
     }
 
+
+    public static boolean areEqual(Channel one, Channel two) {
+        return areEqual(OrientationUtil.of(one), OrientationUtil.of(two));
+    }
+
     public static boolean areEqual(Orientation one, Orientation two) {
         return one.azimuth == two.azimuth && one.dip == two.dip;
     }
 
+    public static boolean areOrthogonal(Channel one, Channel two) {
+        return areOrthogonal(OrientationUtil.of(one), OrientationUtil.of(two));
+    }
+    
     public static boolean areOrthogonal(Orientation one, Orientation two) {
         return areOrthogonal(one, two, 0.0001);
     }
@@ -72,13 +86,20 @@ public class OrientationUtil {
         return new Orientation(-1 * orient.dip, (orient.azimuth + 180) % 360);
     }
 
-    public static ChannelImpl flip(ChannelImpl chan) {
-        return new ChannelImpl(chan.get_id(),
-                               chan.getName(),
-                               flip(chan.getOrientation()),
-                               chan.getSamplingInfo(),
-                               chan.getEffectiveTime(),
-                               chan.getSite());
+    public static Channel flip(Channel chan) {
+        Orientation flipped = flip(new Orientation(chan));
+        Channel out =  new Channel(chan.getStation(), chan.getLocCode(), chan.getChannelCode());
+        out.setAzimuth(flipped.getAzimuth());
+        out.setDip(flipped.getDip());
+        out.setSampleRate(chan.getSampleRate());
+        out.setDepth(chan.getDepth());
+        out.setLatitude(chan.getLatitude());
+        out.setLongitude(chan.getLongitude());
+        out.setElevation(chan.getElevation());
+        out.setStartDateTime(chan.getStartDateTime());
+        out.setEndDateTime(chan.getEndDateTime());
+        throw new ToDoException("set other channel props");
+        //return out;
     }
 
     public static String toString(Orientation orientation) {
