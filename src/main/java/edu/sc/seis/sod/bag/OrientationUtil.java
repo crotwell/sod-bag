@@ -87,7 +87,7 @@ public class OrientationUtil {
     }
 
     public static Channel flip(Channel chan) {
-        Orientation flipped = flip(new Orientation(chan));
+        Orientation flipped = flip( Orientation.of(chan));
         Channel out =  new Channel(chan.getStation(), chan.getLocCode(), chan.getChannelCode());
         out.setAzimuth(flipped.getAzimuth());
         out.setDip(flipped.getDip());

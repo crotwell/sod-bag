@@ -34,7 +34,7 @@ public class FlippedChannel {
     }
 
     public static boolean check(Orientation correct, Channel chan) {
-        return OrientationUtil.angleBetween(correct, new Orientation(chan)) >= 180 - tol;
+        return OrientationUtil.angleBetween(correct, Orientation.of(chan)) >= 180 - tol;
     }
 
     private static double tol = 0.01;

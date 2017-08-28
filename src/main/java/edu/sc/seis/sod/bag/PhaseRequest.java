@@ -98,7 +98,7 @@ public class PhaseRequest  {
                     && LocationUtil.areEqual(origin.getLocation(), prevOriginLoc)
                     && LocationUtil.areSameLocation(channel, prevSiteLoc)) {
                 // don't need to do any work
-                return new RequestFilter(channel.get_id(),
+                return new RequestFilter(channel,
                                          prevRequestFilter.start_time,
                                          prevRequestFilter.end_time);
             }
@@ -139,7 +139,7 @@ public class PhaseRequest  {
             prevOriginLoc = origin.getLocation();
             prevSiteLoc = new Location(channel);
             prevOriginTime = origin.getOriginTime();
-            prevRequestFilter = new RequestFilter(channel.get_id(),
+            prevRequestFilter = new RequestFilter(channel,
                                                   bDate,
                                                   eDate);
         }
@@ -148,7 +148,7 @@ public class PhaseRequest  {
                 + " to "
                 + eDate
                 + " for "
-                + StationIdUtil.toStringNoDates(channel.getStation().get_id()));
+                + StationIdUtil.toStringNoDates(channel.getStation()));
         return prevRequestFilter;
     }
 

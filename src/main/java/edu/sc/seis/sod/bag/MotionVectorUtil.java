@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.bag;
 
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.seismogram.LocalMotionVectorImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -30,9 +31,9 @@ public class MotionVectorUtil {
 	    if ( NetworkIdUtil.areEqual(seismograms[0].channel_id.getNetworkId(),
 					seismograms[k].channel_id.getNetworkId())) {
 		throw new IncompatibleSeismograms("Networks for 0 and "+k+" are not the same, "
-						  +NetworkIdUtil.toString(seismograms[0].channel_id.getNetworkId())
+						  +seismograms[0].channel_id.getNetworkId()
 						  +" "
-						  +NetworkIdUtil.toString(seismograms[k].channel_id.getNetworkId()));
+						  +seismograms[k].channel_id.getNetworkId());
 	    }
 	    
 	    if ( ! seismograms[0].channel_id.getStationCode().equals(
@@ -87,7 +88,7 @@ public class MotionVectorUtil {
 				      seismograms[2].data);
 	return new  LocalMotionVectorImpl(seismograms[0].get_id()+"MotionVec",
 					  seismograms[0].properties,
-					  seismograms[0].begin_time,
+					  new MicroSecondDate(seismograms[0].begin_time),
 					  seismograms[0].num_points,
 					  seismograms[0].sampling_info,
 					  seismograms[0].y_unit,
