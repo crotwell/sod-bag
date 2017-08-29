@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.bag;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.apache.log4j.BasicConfigurator;
 
@@ -22,7 +22,7 @@ public class CutTest extends TestCase {
 
     LocalSeismogramImpl seis;
 
-    ZonedDateTime time = BaseNodeType.parseISOString("20001231T235959.000Z");
+    Instant time = BaseNodeType.parseISOString("20001231T235959.000Z");
 
     int[] data;
     static {

@@ -4,16 +4,14 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.junit.Test;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.mock.Defaults;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
@@ -63,7 +61,7 @@ public class RotateTest  {
     }
 
     public void testRotateGCP() throws Exception {
-        ZonedDateTime now = ZonedDateTime.now(BaseNodeType.TZ_UTC);
+        Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
         LocalSeismogramImpl xSeis = MockSeismogram.createSpike(now);
         LocalSeismogramImpl ySeis = MockSeismogram.createSpike(now);
@@ -90,7 +88,7 @@ public class RotateTest  {
     }
 
     public void testRotateGCPWithOrientation() throws Exception {
-        ZonedDateTime now = ZonedDateTime.now(BaseNodeType.TZ_UTC);
+        Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
         LocalSeismogramImpl xSeis = MockSeismogram.createSpike(now);
         Orientation xOrient = new Orientation(135, 0);
@@ -128,7 +126,7 @@ public class RotateTest  {
     }
     
     public void testRotateGCPXAxis() throws Exception {
-        ZonedDateTime now = ZonedDateTime.now(BaseNodeType.TZ_UTC);
+        Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
         LocalSeismogramImpl xSeis = MockSeismogram.createSpike(now);
         LocalSeismogramImpl ySeis = MockSeismogram.createSpike(now);
