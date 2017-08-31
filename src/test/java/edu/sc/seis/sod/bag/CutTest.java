@@ -7,7 +7,6 @@ import org.apache.log4j.BasicConfigurator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import junit.framework.TestCase;
@@ -53,10 +52,10 @@ public class CutTest extends TestCase {
     }
 
     public void testShiftBegin() throws Exception {
-        MicroSecondDate begin = new MicroSecondDate(time);
-        MicroSecondDate end = new MicroSecondDate(seis.getEndTime());
+        Instant begin = time;
+        Instant end = seis.getEndTime();
         SamplingImpl samp = (SamplingImpl)seis.sampling_info;
-        begin = begin.add(samp.getPeriod());
+        begin = begin.plus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
         assertTrue("Num points is one less " + out.num_points + " "
@@ -64,10 +63,10 @@ public class CutTest extends TestCase {
     }
 
     public void testShiftEnd() throws Exception {
-        MicroSecondDate begin = new MicroSecondDate(time);
-        MicroSecondDate end = new MicroSecondDate(seis.getEndTime());
+        Instant begin = time;
+        Instant end = seis.getEndTime();
         SamplingImpl samp = (SamplingImpl)seis.sampling_info;
-        end = end.subtract(samp.getPeriod());
+        end = end.minus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
         assertEquals("Num points is one less " + out.num_points + " "
@@ -75,10 +74,10 @@ public class CutTest extends TestCase {
     }
 
     public void testOffBegin() throws Exception {
-        MicroSecondDate begin = new MicroSecondDate(time);
-        MicroSecondDate end = new MicroSecondDate(seis.getEndTime());
+        Instant begin = time;
+        Instant end = seis.getEndTime();
         SamplingImpl samp = (SamplingImpl)seis.sampling_info;
-        begin = begin.subtract(samp.getPeriod());
+        begin = begin.minus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
         assertEquals("Num points is equal " + out.num_points + " "
@@ -86,10 +85,10 @@ public class CutTest extends TestCase {
     }
 
     public void testOffEnd() throws Exception {
-        MicroSecondDate begin = new MicroSecondDate(time);
-        MicroSecondDate end = new MicroSecondDate(seis.getEndTime());
+        Instant begin = time;
+        Instant end = seis.getEndTime();
         SamplingImpl samp = (SamplingImpl)seis.sampling_info;
-        end = end.add(samp.getPeriod());
+        end = end.plus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
         assertEquals("Num points is equal  " + out.num_points + " "
@@ -97,8 +96,8 @@ public class CutTest extends TestCase {
     }
     
     public void testExactSeisTimes() throws FissuresException {
-        MicroSecondDate begin = new MicroSecondDate(time);
-        MicroSecondDate end = new MicroSecondDate(seis.getEndTime());
+        Instant begin = time;
+        Instant end = seis.getEndTime();
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
         assertEquals("Num points is same less " + out.num_points + " "

@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.bag;
 
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.TimeSeriesDataSel;
 
@@ -49,7 +48,7 @@ public class Decimate implements LocalSeismogramFunction {
                                           seis.begin_time,
                                           numPts,
                                           new SamplingImpl(seis.getSampling().getNumPoints(),
-                                                           (TimeInterval)seis.getSampling().getTimeInterval().multiplyBy(factor)),
+                                                           seis.getSampling().getTimeInterval().multipliedBy(factor)),
                                           seis.y_unit,
                                           seis.channel_id,
                                           seis.parm_ids,

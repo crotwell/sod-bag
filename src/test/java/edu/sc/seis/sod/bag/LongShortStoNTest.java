@@ -8,6 +8,7 @@ package edu.sc.seis.sod.bag;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.time.Duration;
 import java.util.LinkedList;
 
 import edu.sc.seis.seisFile.mseed.DataRecord;
@@ -19,19 +20,20 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
+import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
 public class LongShortStoNTest extends TestCase {
 
     public void teXstSimple() throws FissuresException {
-        LongShortStoN ston = new LongShortStoN(new TimeInterval(4, UnitImpl.SECOND),
-                                               new TimeInterval(1, UnitImpl.SECOND),
+        LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(4),
+                                               Duration.ofSeconds(1),
                                                2);
         int[] datadata = { 1, 2, 1, 2, 1, 1, 19, -6, 6, -2, 1, 3, 5, -3, -1, 1 };
         int[] data = new int[1000];
         System.arraycopy(datadata, 0, data, 800, datadata.length);
         LocalSeismogramImpl seis = MockSeismogram.createTestData("est", data);
-        seis.sampling_info = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
+        seis.sampling_info = new SamplingImpl(1, ClockUtil.ONE_SECOND);
         LongShortTrigger[] triggers = ston.calcTriggers(seis);
         //  System.out.println("Found "+triggers.length+" triggers");
         //  for (int i = 0; i < triggers.length; i++) {
@@ -40,8 +42,8 @@ public class LongShortStoNTest extends TestCase {
     }
 
     public void tesXtConstant() throws Exception {
-        LongShortStoN ston = new LongShortStoN(new TimeInterval(100, UnitImpl.SECOND),
-                                               new TimeInterval(6, UnitImpl.SECOND),
+        LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(100),
+                                               Duration.ofSeconds(6),
                                                .2f);
         int[] data = new int[1200];
         for (int i = 0; i < data.length; i++) {
@@ -52,7 +54,7 @@ public class LongShortStoNTest extends TestCase {
             }
         }
         LocalSeismogramImpl seis = MockSeismogram.createTestData("est", data);
-        seis.sampling_info = new SamplingImpl(1, new TimeInterval(.1f, UnitImpl.SECOND));
+        seis.sampling_info = SamplingImpl.ofSamplesSeconds(1, 0.1);
         LongShortTrigger[] triggers = ston.calcTriggers(seis);
         //System.out.println("Found "+triggers.length+" triggers");
         for (int i = 0; i < triggers.length; i++) {
@@ -77,8 +79,8 @@ public class LongShortStoNTest extends TestCase {
         dr = (DataRecord[])drList.toArray(dr);
         LocalSeismogramImpl seis = FissuresConvert.toFissures(dr);
 
-        LongShortStoN ston = new LongShortStoN(new TimeInterval(100, UnitImpl.SECOND),
-                                               new TimeInterval(6, UnitImpl.SECOND),
+        LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(100),
+                                               Duration.ofSeconds(6),
                                                7f);
         LongShortTrigger[] triggers = ston.calcTriggers(seis);
         //System.out.println("Found "+triggers.length+" triggers: cols are index, when, lta, sta, ratio");

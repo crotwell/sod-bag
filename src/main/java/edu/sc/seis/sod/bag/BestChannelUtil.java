@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -196,11 +197,11 @@ public class BestChannelUtil {
     /**
      * Prunes channels whose effective time does not overlap the given time.
      */
-    public static List<Channel> pruneChannels(List<Channel> inChan, MicroSecondDate when) {
+    public static List<Channel> pruneChannels(List<Channel> inChan, Instant when) {
         List<Channel> out = new ArrayList<Channel>();
         for (Channel c : inChan) {
-            if (when.before(new MicroSecondDate(c.getEndDateTime()))
-                    && when.after(new MicroSecondDate(c.getStartDateTime()))) {
+            if (when.isBefore(c.getEndDateTime())
+                    && when.isAfter(c.getStartDateTime())) {
                 out.add(c);
             }
         }

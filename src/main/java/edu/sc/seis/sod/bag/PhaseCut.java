@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.bag;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,11 +18,9 @@ import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class PhaseCut {
 
@@ -28,8 +28,8 @@ public class PhaseCut {
      the TauP_Time class while it is being used here. If another thread
      accesses it, the results will be unpredictable. */
     public PhaseCut(TauPUtil timeCalc,
-                    String beginPhase, TimeInterval beginOffset,
-                    String endPhase, TimeInterval endOffset) {
+                    String beginPhase, Duration beginOffset,
+                    String endPhase, Duration endOffset) {
         this.timeCalc = timeCalc;
         this.beginPhase = beginPhase;
         this.beginOffset = beginOffset;
@@ -49,13 +49,12 @@ public class PhaseCut {
         List<Arrival> beginArrivals = timeCalc.calcTravelTimes(stationLoc, origin, new String[] {beginPhase});
         List<Arrival> endArrivals = timeCalc.calcTravelTimes(stationLoc, origin, new String[] {endPhase});
 
-        MicroSecondDate beginTime = null;
-        MicroSecondDate endTime = null;
-        MicroSecondDate originTime = new MicroSecondDate(origin.getOriginTime());
+        Instant beginTime = null;
+        Instant endTime = null;
+        Instant originTime = origin.getOriginTime();
         if (beginArrivals.size() != 0) {
-            beginTime = originTime.add(new TimeInterval(beginArrivals.get(0).getTime(),
-                                                        UnitImpl.SECOND));
-            beginTime = beginTime.add(beginOffset);
+            beginTime = originTime.plus(ClockUtil.durationFromSeconds(beginArrivals.get(0).getTime());
+            beginTime = beginTime.plus(beginOffset);
         } else {
             DistAz distAz = new DistAz(stationLoc, origin.getLocation());
             throw new PhaseNonExistent("Phase "+beginPhase+
@@ -64,9 +63,8 @@ public class PhaseCut {
         }
 
         if (endArrivals.size() != 0) {
-            endTime = originTime.add(new TimeInterval(endArrivals.get(0).getTime(),
-                                                        UnitImpl.SECOND));
-            endTime = endTime.add(endOffset);
+            endTime = originTime.plus(ClockUtil.durationFromSeconds(endArrivals.get(0).getTime()));
+            endTime = endTime.plus(endOffset);
         } else {
             DistAz distAz = new DistAz(stationLoc, origin.getLocation());
             throw new PhaseNonExistent("Phase "+endPhase+
@@ -81,11 +79,11 @@ public class PhaseCut {
 
     String beginPhase;
 
-    TimeInterval beginOffset;
+    Duration beginOffset;
 
     String endPhase;
 
-    TimeInterval endOffset;
+    Duration endOffset;
 
     Logger logger = LoggerFactory.getLogger(PhaseCut.class);
 }

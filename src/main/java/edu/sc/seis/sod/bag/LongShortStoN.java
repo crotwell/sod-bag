@@ -6,10 +6,10 @@
 
 package edu.sc.seis.sod.bag;
 
+import java.time.Duration;
 import java.util.LinkedList;
 
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
@@ -32,8 +32,8 @@ public class LongShortStoN {
      * @param shortTime Time Interval for the short term average
      * @param threshold ration of short to long termaverages above which a trigger is declared
      **/
-    public LongShortStoN(TimeInterval longTime, TimeInterval shortTime, float threshold) {
-        this(longTime, shortTime, threshold, (TimeInterval)shortTime.multiplyBy(2));
+    public LongShortStoN(Duration longTime, Duration shortTime, float threshold) {
+        this(longTime, shortTime, threshold, shortTime.multipliedBy(2));
     }
 
 
@@ -42,16 +42,16 @@ public class LongShortStoN {
      * @param shortTime Time Interval for the short term average
      * @param threshold ration of short to long termaverages above which a trigger is declared
      **/
-    public LongShortStoN(TimeInterval longTime, TimeInterval shortTime, float threshold, TimeInterval delay) {
-        this(longTime, shortTime, threshold, delay, new TimeInterval(100, UnitImpl.SECOND));
+    public LongShortStoN(Duration longTime, Duration shortTime, float threshold, Duration delay) {
+        this(longTime, shortTime, threshold, delay, Duration.ofSeconds(100));
     }
 
-    public LongShortStoN(TimeInterval longTime, TimeInterval shortTime, float threshold, TimeInterval delay, TimeInterval meanTime) {
-        if (longTime.lessThanEqual(shortTime)) {
+    public LongShortStoN(Duration longTime, Duration shortTime, float threshold, Duration delay, Duration meanTime) {
+        if (longTime.toNanos() <= shortTime.toNanos()) {
             throw new IllegalArgumentException("longTime must be longer than shortTime, longTime="+longTime+
                                                    "  shortTime="+shortTime);
         }
-        if (delay.lessThan(shortTime)) {
+        if (delay.toNanos() < shortTime.toNanos()) {
             throw new IllegalArgumentException("delay must be longer than shortTime, shortTime="+shortTime+
                                                    "  delay="+delay);
         }
@@ -71,12 +71,12 @@ public class LongShortStoN {
         //    as well as in trgdly
 
         double dt = seis.getSampling().getPeriod().convertTo(UnitImpl.SECOND).get_value();
-        int nlta=(int)(longTime.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nsta=(int)(shortTime.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int ntdly=(int)(delay.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nmean=(int)(meanTime.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int nlta=(int)(longTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int nsta=(int)(shortTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int ntdly=(int)(delay.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int nmean=(int)(meanTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
 
-        if (seis.getEndTime().subtract(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
+        if (seis.getEndTime().minus(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
             // seis is too short, so no trigger possible
             return new LongShortTrigger[0];
         }
@@ -152,11 +152,11 @@ public class LongShortStoN {
         //    as well as in trgdly
 
         float dt = (float)seis.getSampling().getPeriod().convertTo(UnitImpl.SECOND).get_value();
-        int nlta=(int)(longTime.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nsta=(int)(shortTime.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int ntdly=(int)(delay.divideBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int nlta=(int)(longTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int nsta=(int)(shortTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        int ntdly=(int)(delay.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
 
-        if (seis.getEndTime().subtract(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
+        if (seis.getEndTime().minus(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
             // seis is too short, so no trigger possible
             return new LongShortTrigger[0];
         }
@@ -241,11 +241,11 @@ public class LongShortStoN {
         return trigger;
     }
 
-    protected TimeInterval longTime;
-    protected TimeInterval shortTime;
-    protected TimeInterval delay;
+    protected Duration longTime;
+    protected Duration shortTime;
+    protected Duration delay;
     protected float threshold;
-    protected TimeInterval meanTime;
+    protected Duration meanTime;
 }
 
 

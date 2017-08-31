@@ -7,9 +7,8 @@
 package edu.sc.seis.sod.bag;
 
 import java.io.Serializable;
+import java.time.Instant;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 
@@ -22,7 +21,7 @@ public class LongShortTrigger implements Serializable {
              seis.get_id(),
              index,
              value,
-             seis.getBeginTime().add((TimeInterval)seis.getSampling().getPeriod().multiplyBy(index)),
+             seis.getBeginTime().plus(seis.getSampling().getPeriod().multipliedBy(index)),
              sta,
              lta);
     }
@@ -31,7 +30,7 @@ public class LongShortTrigger implements Serializable {
                             String seisId,
                             int index,
                             float value,
-                            MicroSecondDate when,
+                            Instant when,
                             float sta,
                             float lta){
         this.seisId = seisId;
@@ -66,7 +65,7 @@ public class LongShortTrigger implements Serializable {
      *
      * @return    a  MicroSecondDate
      */
-    public MicroSecondDate getWhen() {
+    public Instant getWhen() {
         return when;
     }
 
@@ -100,7 +99,7 @@ public class LongShortTrigger implements Serializable {
 
     private ChannelId channelId;
 
-    private MicroSecondDate when;
+    private Instant when;
 
     private float value;
 

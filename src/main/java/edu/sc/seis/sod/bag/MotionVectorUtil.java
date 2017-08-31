@@ -88,13 +88,13 @@ public class MotionVectorUtil {
 				      seismograms[2].data);
 	return new  LocalMotionVectorImpl(seismograms[0].get_id()+"MotionVec",
 					  seismograms[0].properties,
-					  new MicroSecondDate(seismograms[0].begin_time),
+					  seismograms[0].begin_time,
 					  seismograms[0].num_points,
 					  seismograms[0].sampling_info,
 					  seismograms[0].y_unit,
 					  channel_group,
 					  seismograms[0].parm_ids,
-					  (TimeInterval[])seismograms[0].time_corrections,
+					  )seismograms[0].time_corrections,
 					  seismograms[0].sample_rate_history,
 					  data);
     }

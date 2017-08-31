@@ -50,7 +50,7 @@ public class Upsample implements LocalSeismogramFunction {
                                           seis.begin_time,
                                           numPts,
                                           new SamplingImpl(seis.getSampling().getNumPoints()*factor,
-                                                           (TimeInterval)seis.getSampling().getTimeInterval()),
+                                                           seis.getSampling().getTimeInterval()),
                                           seis.y_unit,
                                           seis.channel_id,
                                           seis.parm_ids,

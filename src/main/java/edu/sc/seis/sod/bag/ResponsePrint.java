@@ -2,6 +2,7 @@ package edu.sc.seis.sod.bag;
 
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -18,7 +19,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLTagNames;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Unit;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
@@ -57,8 +57,8 @@ public class ResponsePrint {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy,DDD,HH:mm:ss");
         TimeZone gmt = TimeZone.getTimeZone("GMT");
         sdf.setTimeZone(gmt);
-        MicroSecondDate stime = effective_time.getBeginTime();
-        MicroSecondDate etime = effective_time.getEndTime();
+        Instant stime = effective_time.getBeginTime();
+        Instant etime = effective_time.getEndTime();
         InstrumentSensitivity sensitivity = response.getInstrumentSensitivity();
         StringBuffer r = new StringBuffer();
         r.append("\n#");
@@ -110,8 +110,8 @@ public class ResponsePrint {
         if(id.getLocCode().length() == 2)
             s.append(id.getLocCode() + " ");
         s.append(id.getChannelCode() + "           |\n");
-        MicroSecondDate stime = effective_time.getBeginTime();
-        MicroSecondDate etime = effective_time.getEndTime();
+        Instant stime = effective_time.getBeginTime();
+        Instant etime = effective_time.getEndTime();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         TimeZone gmt = TimeZone.getTimeZone("GMT");
         sdf.setTimeZone(gmt);

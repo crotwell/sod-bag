@@ -1,4 +1,6 @@
 package edu.sc.seis.sod.bag;
+import java.time.Duration;
+
 import edu.sc.seis.sod.model.common.TimeInterval;
 
 
@@ -106,7 +108,7 @@ public class IterDeconResult {
      *
      * @param    AlignShift          a  TimeInterval
      */
-    public void setAlignShift(TimeInterval alignShift) {
+    public void setAlignShift(Duration alignShift) {
         this.alignShift = alignShift;
     }
 
@@ -115,7 +117,7 @@ public class IterDeconResult {
      *
      * @return    a  TimeInterval
      */
-    public TimeInterval getAlignShift() {
+    public Duration getAlignShift() {
         return alignShift;
     }
 
@@ -135,7 +137,7 @@ public class IterDeconResult {
         return bump;
     }
 
-    TimeInterval alignShift;
+    Duration alignShift;
 
     float[][] corrSave;
 

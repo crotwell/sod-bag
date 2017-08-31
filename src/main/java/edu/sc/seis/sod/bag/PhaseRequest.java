@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,14 +12,12 @@ import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationUtil;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.EventUtil;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class PhaseRequest  {
 
@@ -29,9 +29,9 @@ public class PhaseRequest  {
     }
 
     public PhaseRequest(String beginPhase,
-                        TimeInterval beginOffest,
+                        Duration beginOffest,
                         String endPhase,
-                        TimeInterval endOffset,
+                        Duration endOffset,
                         String model) throws TauModelException {
         this(beginPhase, endPhase, model);
         this.beginOffset = beginOffest;
@@ -39,10 +39,10 @@ public class PhaseRequest  {
     }
     
     public PhaseRequest(String beginPhase,
-                        TimeInterval beginOffset,
+                        Duration beginOffset,
                         String endPhase,
                         double endOffestRatio,
-                        TimeInterval endOffsetMinimum,
+                        Duration endOffsetMinimum,
                         boolean negateEndOffsetRatio,
                         String model) throws TauModelException {
         this(beginPhase, endPhase, model);
@@ -55,10 +55,10 @@ public class PhaseRequest  {
     
     public PhaseRequest(String beginPhase,
                         double beginOffestRatio,
-                        TimeInterval beginOffsetMinimum,
+                        Duration beginOffsetMinimum,
                         boolean negateBeginOffsetRatio,
                         String endPhase,
-                        TimeInterval endOffset,
+                        Duration endOffset,
                         String model) throws TauModelException {
         this(beginPhase, endPhase, model);
         this.beginOffset = null;
@@ -70,11 +70,11 @@ public class PhaseRequest  {
     
     public PhaseRequest(String beginPhase,
                         double beginOffestRatio,
-                        TimeInterval beginOffsetMinimum,
+                        Duration beginOffsetMinimum,
                         boolean negateBeginOffsetRatio,
                         String endPhase,
                         double endOffestRatio,
-                        TimeInterval endOffsetMinimum,
+                        Duration endOffsetMinimum,
                         boolean negateEndOffsetRatio,
                         String model) throws TauModelException {
         this(beginPhase, endPhase, model);
@@ -109,12 +109,12 @@ public class PhaseRequest  {
             // no arrivals found, return zero length request filters
             return null;
         }
-        MicroSecondDate originDate = new MicroSecondDate(origin.getOriginTime());
-        MicroSecondDate bDate = originDate.add(new TimeInterval(begin, UnitImpl.SECOND));
-        MicroSecondDate eDate = originDate.add(new TimeInterval(end, UnitImpl.SECOND));
+        Instant originDate = origin.getOriginTime();
+        Instant bDate = originDate.plus(ClockUtil.durationFromSeconds(begin));
+        Instant eDate = originDate.plus(ClockUtil.durationFromSeconds(end));
 
-        TimeInterval bInterval;
-        TimeInterval eInterval;
+        Duration bInterval;
+        Duration eInterval;
         if(beginOffset != null) {
             bInterval = beginOffset;
         } else {
@@ -133,8 +133,8 @@ public class PhaseRequest  {
                                                  endOffsetRatioMinimum,
                                                  negateEndOffsetRatio);
         }
-        bDate = bDate.add(bInterval);
-        eDate = eDate.add(eInterval);
+        bDate = bDate.plus(bInterval);
+        eDate = eDate.plus(eInterval);
         synchronized(this) {
             prevOriginLoc = origin.getLocation();
             prevSiteLoc = new Location(channel);
@@ -168,24 +168,22 @@ public class PhaseRequest  {
         return Math.rint(1000 * arrivals.get(0).getTime()) / 1000;
     }
 
-    public static TimeInterval getTimeIntervalFromRatio(MicroSecondDate startPhaseTime,
-                                                        MicroSecondDate endPhaseTime,
+    public static Duration getTimeIntervalFromRatio(Instant startPhaseTime,
+                                                    Instant endPhaseTime,
                                                         double ratio,
-                                                        TimeInterval minimumTime,
+                                                        Duration minimumTime,
                                                         boolean negate) {
-        TimeInterval interval = new TimeInterval(endPhaseTime.difference(startPhaseTime)
-                .multiplyBy(ratio));
+        Duration interval = Duration.ofNanos(Math.round(Duration.between(startPhaseTime,  endPhaseTime).toNanos()*ratio));
         if(interval.lessThan(minimumTime)) {
             return negateIfTrue(minimumTime, negate);
         }
         return negateIfTrue(interval, negate);
     }
 
-    public static TimeInterval negateIfTrue(TimeInterval interval,
+    public static Duration negateIfTrue(Duration interval,
                                             boolean negate) {
         if(negate) {
-            double value = interval.getValue();
-            return new TimeInterval(-value, interval.getUnit());
+            return interval.negated();
         }
         return interval;
     }
@@ -198,11 +196,11 @@ public class PhaseRequest  {
         return endPhase;
     }
     
-    public TimeInterval getBeginOffset() {
+    public Duration getBeginOffset() {
         return beginOffset;
     }
     
-    public TimeInterval getEndOffset() {
+    public Duration getEndOffset() {
         return endOffset;
     }
     
@@ -214,11 +212,11 @@ public class PhaseRequest  {
         return endOffsetRatio;
     }
     
-    public TimeInterval getBeginOffsetRatioMinimum() {
+    public Duration getBeginOffsetRatioMinimum() {
         return beginOffsetRatioMinimum;
     }
     
-    public TimeInterval getEndOffsetRatioMinimum() {
+    public Duration getEndOffsetRatioMinimum() {
         return endOffsetRatioMinimum;
     }
     
@@ -232,11 +230,11 @@ public class PhaseRequest  {
     
     private String beginPhase, endPhase;
 
-    private TimeInterval beginOffset, endOffset;
+    private Duration beginOffset, endOffset;
 
     private double beginOffsetRatio, endOffsetRatio;
 
-    private TimeInterval beginOffsetRatioMinimum, endOffsetRatioMinimum;
+    private Duration beginOffsetRatioMinimum, endOffsetRatioMinimum;
 
     private boolean negateBeginOffsetRatio = false,
             negateEndOffsetRatio = false;
@@ -247,7 +245,7 @@ public class PhaseRequest  {
 
     private Location prevOriginLoc, prevSiteLoc;
     
-    private MicroSecondDate prevOriginTime;
+    private Instant prevOriginTime;
 
     private static Logger logger = LoggerFactory.getLogger(PhaseRequest.class);
 

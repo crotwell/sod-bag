@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.bag;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.EncodedData;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -26,14 +27,14 @@ import edu.sc.seis.sod.util.time.ReduceTool;
  */
 public class Cut implements LocalSeismogramFunction {
 
-    public Cut(MicroSecondDate begin, MicroSecondDate end) {
+    public Cut(Instant begin, Instant end) {
         this.begin = begin;
         this.end = end;
     }
 
     public Cut(RequestFilter request) {
-        this(new MicroSecondDate(request.start_time),
-             new MicroSecondDate(request.end_time));
+        this(request.start_time,
+             request.end_time);
     }
 
     /**
@@ -83,20 +84,20 @@ public class Cut implements LocalSeismogramFunction {
             outSeis = new LocalSeismogramImpl(seis, outD);
         } // end of else
         outSeis.begin_time = seis.getBeginTime()
-                .add((TimeInterval)seis.getSampling()
+                .plus(seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(beginIndex));
+                        .multipliedBy(beginIndex));
         return outSeis;
     }
 
     public boolean overlaps(LocalSeismogramImpl seis) {
-        return begin.before(seis.getEndTime())
-                && end.after(seis.getBeginTime());
+        return begin.isBefore(seis.getEndTime())
+                && end.isAfter(seis.getBeginTime());
     }
 
     protected int getEndIndex(LocalSeismogramImpl seis) {
-        TimeInterval sampPeriod = seis.getSampling().getPeriod();
-        QuantityImpl endShift = end.subtract(seis.getBeginTime());;
+        Duration sampPeriod = seis.getSampling().getPeriod();
+        QuantityImpl endShift = end.minus(seis.getBeginTime());;
         endShift = endShift.divideBy(sampPeriod);
         endShift = endShift.convertTo(SEC_PER_SEC); // should be dimensonless
         int endIndex = (int)Math.floor(endShift.getValue());
@@ -110,8 +111,8 @@ public class Cut implements LocalSeismogramFunction {
     }
 
     protected int getBeginIndex(LocalSeismogramImpl seis) {
-        TimeInterval sampPeriod = seis.getSampling().getPeriod();
-        QuantityImpl beginShift = begin.subtract(seis.getBeginTime());
+        Duration sampPeriod = seis.getSampling().getPeriod();
+        QuantityImpl beginShift = begin.minus(seis.getBeginTime());
         beginShift = beginShift.divideBy(sampPeriod);
         beginShift = beginShift.convertTo(SEC_PER_SEC); // should be
         // dimensonless
@@ -129,15 +130,15 @@ public class Cut implements LocalSeismogramFunction {
         return "Cut from " + begin + " to " + end;
     }
 
-    public MicroSecondDate getBegin() {
+    public Instant getBegin() {
         return begin;
     }
 
-    public MicroSecondDate getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    private MicroSecondDate begin, end;
+    private Instant begin, end;
 
     public static final UnitImpl SEC_PER_SEC = UnitImpl.divide(UnitImpl.SECOND,
                                                                UnitImpl.SECOND);
@@ -145,17 +146,17 @@ public class Cut implements LocalSeismogramFunction {
     public RequestFilter apply(RequestFilter original) {
         RequestFilter result = new RequestFilter();
         result.channel_id = original.channel_id;
-        MicroSecondDate filterBegin = new MicroSecondDate(original.start_time);
-        MicroSecondDate filterEnd = new MicroSecondDate(original.end_time);
-        if(begin.after(filterEnd) || end.before(filterBegin)) {
+        Instant filterBegin = original.start_time;
+        Instant filterEnd = original.end_time;
+        if(begin.isAfter(filterEnd) || end.isBefore(filterBegin)) {
             return null;
         } // end of if ()
-        if(begin.after(filterBegin)) {
+        if(begin.isAfter(filterBegin)) {
             result.start_time = begin;
         } else {
             result.start_time = original.start_time;
         }
-        if(end.before(filterEnd)) {
+        if(end.isBefore(filterEnd)) {
             result.end_time = end;
         } else {
             result.end_time = original.end_time;
@@ -215,9 +216,9 @@ public class Cut implements LocalSeismogramFunction {
         ds.encoded_values((EncodedData[])outData.toArray(new EncodedData[outData.size()]));
         LocalSeismogramImpl outSeis = new LocalSeismogramImpl(seis, ds);
         outSeis.begin_time = seis.getBeginTime()
-                .add((TimeInterval)seis.getSampling()
+                .plus(seis.getSampling()
                         .getPeriod()
-                        .multiplyBy(firstUsedPoint));
+                        .multipliedBy(firstUsedPoint));
         outSeis.num_points = pointsInNewSeis;
         return outSeis;
     }
@@ -278,19 +279,19 @@ class CutReduceTool extends ReduceTool {
                         seis[j] = null;
                         changeMade = true;
                     } else if(RangeTool.areOverlapping(seis[i], seis[j])) {
-                        MicroSecondDate iEnd = seis[i].getEndTime();
-                        MicroSecondDate iBegin = seis[i].getBeginTime();
-                        TimeInterval halfSample = (TimeInterval)seis[i].getSampling()
+                        Instant iEnd = seis[i].getEndTime();
+                        Instant iBegin = seis[i].getBeginTime();
+                        Duration halfSample = seis[i].getSampling()
                                 .getPeriod()
-                                .divideBy(2);
-                        if(iEnd.before(seis[j].getEndTime())) {
+                                .dividedBy(2);
+                        if(iEnd.isBefore(seis[j].getEndTime())) {
                             // overlap on i's end
-                            Cut cut = new Cut(iEnd.add(halfSample),
+                            Cut cut = new Cut(iEnd.plus(halfSample),
                                               seis[j].getEndTime());
                             seis[j] = cut.apply(seis[j]);
                         } else {
                             Cut cut = new Cut(seis[j].getBeginTime(),
-                                              iBegin.subtract(halfSample));
+                                              iBegin.minus(halfSample));
                             seis[j] = cut.apply(seis[j]);
                         }
                         if (seis[j] != null) {

@@ -5,6 +5,7 @@ import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
 
@@ -27,7 +28,7 @@ public class CalculusTest
 		LocalSeismogramImpl diffSeis = MockSeismogram.createTestData("est", new int[0]);
 		diffSeis.data.flt_values(diff);
 		diffSeis.num_points = diff.length;
-		diffSeis.sampling_info = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
+		diffSeis.sampling_info = new SamplingImpl(1, ClockUtil.ONE_SECOND);
 		LocalSeismogramImpl intSeis = Calculus.integrate(diffSeis);
 		float[] intData = intSeis.get_as_floats();
 		for (int i = 1; i < diff.length; i++) {
@@ -40,7 +41,7 @@ public class CalculusTest
 			diff[i] = 1;
 		}
 		LocalSeismogramImpl diffSeis = MockSeismogram.createTestData("est", diff);
-		diffSeis.sampling_info = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
+		diffSeis.sampling_info = new SamplingImpl(1, ClockUtil.ONE_SECOND);
 		LocalSeismogramImpl intSeis = Calculus.integrate(diffSeis);
 		float[] intData = intSeis.get_as_floats();
 		for (int i = 1; i < diff.length; i++) {

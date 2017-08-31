@@ -32,7 +32,6 @@ public class SamplingUtil {
     }
 
     private static double getSamplesPerSecond(SamplingImpl sampling) {
-        double numSeconds = new TimeInterval(sampling.interval).convertTo(UnitImpl.SECOND).getValue();
-        return sampling.numPoints / numSeconds;
+        return sampling.getFrequency().getValue(UnitImpl.HERTZ);
     }
 }
