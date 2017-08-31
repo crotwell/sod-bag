@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.bag;
 
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.TimeSeriesDataSel;
 

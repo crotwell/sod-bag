@@ -1,8 +1,6 @@
 package edu.sc.seis.sod.bag;
 import java.time.Duration;
 
-import edu.sc.seis.sod.model.common.TimeInterval;
-
 
 
 /**

@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.bag;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.seismogram.LocalMotionVectorImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.VectorComponent;

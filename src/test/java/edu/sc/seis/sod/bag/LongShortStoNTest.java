@@ -16,8 +16,6 @@ import edu.sc.seis.seisFile.mseed.SeedRecord;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
 import edu.sc.seis.sod.util.time.ClockUtil;

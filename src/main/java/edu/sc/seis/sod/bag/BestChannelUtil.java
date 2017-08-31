@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 
 public class BestChannelUtil {
