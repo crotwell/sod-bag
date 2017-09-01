@@ -12,12 +12,12 @@ import java.util.List;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 /** Calculates a signal to noise ration around a phase. The short time window
  * (numerator of the ratio) is given by the standard deviation of the section of the seismogram
@@ -137,7 +137,7 @@ public class SimplePhaseStoN {
         Instant phaseTime = null;
         Instant originTime = origin.getOriginTime();
         if (arrivals.size() != 0) {
-            phaseTime = originTime.plus(ClockUtil.durationFromSeconds(arrivals.get(0).getTime()));
+            phaseTime = originTime.plus(TimeUtils.durationFromSeconds(arrivals.get(0).getTime()));
         }
 
         Duration sampPeriod = seis.getSampling().getPeriod();

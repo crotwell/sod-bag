@@ -4,7 +4,7 @@ import java.time.Instant;
 
 import org.apache.log4j.BasicConfigurator;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
@@ -21,7 +21,7 @@ public class CutTest extends TestCase {
 
     LocalSeismogramImpl seis;
 
-    Instant time = BaseNodeType.parseISOString("20001231T235959.000Z");
+    Instant time = TimeUtils.parseISOString("20001231T235959.000Z");
 
     int[] data;
     static {

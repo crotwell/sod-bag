@@ -2,11 +2,11 @@ package edu.sc.seis.sod.bag;
 
 import java.time.Instant;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
 public class DecimateTest extends TestCase {
@@ -18,7 +18,7 @@ public class DecimateTest extends TestCase {
                                                                            Instant.now(),
                                                                            MockChannelId.createVerticalChanId(),
                                                                            new SamplingImpl(20,
-                                                                                            ClockUtil.ONE_SECOND));
+                                                                                            TimeUtils.ONE_SECOND));
         Decimate decimate = new Decimate(factor);
         LocalSeismogramImpl out = decimate.apply(seis);
         assertEquals("seis length", seis.getNumPoints()/factor, out.getNumPoints());

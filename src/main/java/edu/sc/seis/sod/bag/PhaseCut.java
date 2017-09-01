@@ -15,12 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class PhaseCut {
 
@@ -53,7 +53,7 @@ public class PhaseCut {
         Instant endTime = null;
         Instant originTime = origin.getOriginTime();
         if (beginArrivals.size() != 0) {
-            beginTime = originTime.plus(ClockUtil.durationFromSeconds(beginArrivals.get(0).getTime());
+            beginTime = originTime.plus(TimeUtils.durationFromSeconds(beginArrivals.get(0).getTime());
             beginTime = beginTime.plus(beginOffset);
         } else {
             DistAz distAz = new DistAz(stationLoc, origin.getLocation());
@@ -63,7 +63,7 @@ public class PhaseCut {
         }
 
         if (endArrivals.size() != 0) {
-            endTime = originTime.plus(ClockUtil.durationFromSeconds(endArrivals.get(0).getTime()));
+            endTime = originTime.plus(TimeUtils.durationFromSeconds(endArrivals.get(0).getTime()));
             endTime = endTime.plus(endOffset);
         } else {
             DistAz distAz = new DistAz(stationLoc, origin.getLocation());

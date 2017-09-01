@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationUtil;
@@ -17,7 +18,6 @@ import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.EventUtil;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class PhaseRequest  {
 
@@ -110,8 +110,8 @@ public class PhaseRequest  {
             return null;
         }
         Instant originDate = origin.getOriginTime();
-        Instant bDate = originDate.plus(ClockUtil.durationFromSeconds(begin));
-        Instant eDate = originDate.plus(ClockUtil.durationFromSeconds(end));
+        Instant bDate = originDate.plus(TimeUtils.durationFromSeconds(begin));
+        Instant eDate = originDate.plus(TimeUtils.durationFromSeconds(end));
 
         Duration bInterval;
         Duration eInterval;

@@ -11,6 +11,7 @@ import java.io.EOFException;
 import java.time.Duration;
 import java.util.LinkedList;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedRecord;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
@@ -18,7 +19,6 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
-import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
 public class LongShortStoNTest extends TestCase {
@@ -31,7 +31,7 @@ public class LongShortStoNTest extends TestCase {
         int[] data = new int[1000];
         System.arraycopy(datadata, 0, data, 800, datadata.length);
         LocalSeismogramImpl seis = MockSeismogram.createTestData("est", data);
-        seis.sampling_info = new SamplingImpl(1, ClockUtil.ONE_SECOND);
+        seis.sampling_info = new SamplingImpl(1, TimeUtils.ONE_SECOND);
         LongShortTrigger[] triggers = ston.calcTriggers(seis);
         //  System.out.println("Found "+triggers.length+" triggers");
         //  for (int i = 0; i < triggers.length; i++) {

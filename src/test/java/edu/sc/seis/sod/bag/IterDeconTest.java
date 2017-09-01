@@ -7,12 +7,12 @@ import java.io.DataInputStream;
 
 import org.junit.Test;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class IterDeconTest {
 
@@ -56,7 +56,7 @@ public class IterDeconTest {
         numData[300] = .25f;
         float[] denomData = new float[numData.length];
         denomData[100] = .5f;
-        SamplingImpl sampling = new SamplingImpl(1, ClockUtil.durationFromSeconds(delta));
+        SamplingImpl sampling = new SamplingImpl(1, TimeUtils.durationFromSeconds(delta));
         LocalSeismogramImpl fakeNum = MockSeismogram.createTestData("num");
         fakeNum.setData(numData);
         fakeNum.channel_id.setChannelCode("BHR");
