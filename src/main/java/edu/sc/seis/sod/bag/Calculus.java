@@ -3,6 +3,7 @@ package edu.sc.seis.sod.bag;
 import java.time.Duration;
 import java.time.Instant;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -41,8 +42,7 @@ public class Calculus {
 	public static LocalSeismogramImpl differentiate(LocalSeismogramImpl seis)
 			throws FissuresException {
 		SamplingImpl samp = seis.getSampling();
-		double sampPeriod = samp.getPeriod().convertTo(UnitImpl.SECOND)
-				.getValue();
+		double sampPeriod = TimeUtils.durationToDoubleSeconds(samp.getPeriod());
 		LocalSeismogramImpl outSeis;
 
 		if (seis.can_convert_to_float()) {
@@ -64,7 +64,7 @@ public class Calculus {
 		outSeis.y_unit = UnitImpl.divide(UnitImpl
 				.createUnitImpl(outSeis.y_unit), UnitImpl.SECOND);
 		Instant begin = outSeis.getBeginTime();
-		begin = begin.plus(Duration.ofNanos(Math.round(samp.getPeriod().getValue(UnitImpl.NANOSECOND) / 2)));
+		begin = begin.plus(samp.getPeriod().dividedBy(2));
 		outSeis.begin_time = begin;
 		return outSeis;
 	}
@@ -72,8 +72,7 @@ public class Calculus {
 	public static LocalSeismogramImpl integrate(LocalSeismogramImpl seis)
 			throws FissuresException {
 		SamplingImpl samp = seis.getSampling();
-		double sampPeriod = samp.getPeriod().convertTo(UnitImpl.SECOND)
-				.getValue();
+        double sampPeriod = TimeUtils.durationToDoubleSeconds(samp.getPeriod());
 		LocalSeismogramImpl outSeis;
 		if (seis.can_convert_to_float()) {
 			float[] data = seis.get_as_floats();

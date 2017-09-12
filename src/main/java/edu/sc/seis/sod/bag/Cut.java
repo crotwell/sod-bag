@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -32,8 +33,8 @@ public class Cut implements LocalSeismogramFunction {
     }
 
     public Cut(RequestFilter request) {
-        this(request.start_time,
-             request.end_time);
+        this(request.startTime,
+             request.endTime);
     }
 
     /**
@@ -96,10 +97,9 @@ public class Cut implements LocalSeismogramFunction {
 
     protected int getEndIndex(LocalSeismogramImpl seis) {
         Duration sampPeriod = seis.getSampling().getPeriod();
-        QuantityImpl endShift = end.minus(seis.getBeginTime());;
-        endShift = endShift.divideBy(sampPeriod);
-        endShift = endShift.convertTo(SEC_PER_SEC); // should be dimensonless
-        int endIndex = (int)Math.floor(endShift.getValue());
+        Duration endShift = Duration.between(seis.getBeginTime(), end);
+        double endShiftSecs = TimeUtils.durationToDoubleSeconds(endShift) / TimeUtils.durationToDoubleSeconds(sampPeriod);
+        int endIndex = (int)Math.floor(endShiftSecs);
         if(endIndex < 0) {
             endIndex = 0;
         }
@@ -111,11 +111,9 @@ public class Cut implements LocalSeismogramFunction {
 
     protected int getBeginIndex(LocalSeismogramImpl seis) {
         Duration sampPeriod = seis.getSampling().getPeriod();
-        QuantityImpl beginShift = begin.minus(seis.getBeginTime());
-        beginShift = beginShift.divideBy(sampPeriod);
-        beginShift = beginShift.convertTo(SEC_PER_SEC); // should be
-        // dimensonless
-        int beginIndex = (int)Math.ceil(beginShift.getValue());
+        Duration beginShift = Duration.between(seis.getBeginTime(), begin);
+        double beginShiftSecs = TimeUtils.durationToDoubleSeconds(beginShift) / TimeUtils.durationToDoubleSeconds(sampPeriod);
+        int beginIndex = (int)Math.ceil(beginShiftSecs);
         if(beginIndex < 0) {
             beginIndex = 0;
         } // end of if (beginIndex < 0)
@@ -143,22 +141,19 @@ public class Cut implements LocalSeismogramFunction {
                                                                UnitImpl.SECOND);
 
     public RequestFilter apply(RequestFilter original) {
-        RequestFilter result = new RequestFilter();
-        result.channel_id = original.channel_id;
-        Instant filterBegin = original.start_time;
-        Instant filterEnd = original.end_time;
-        if(begin.isAfter(filterEnd) || end.isBefore(filterBegin)) {
+        RequestFilter result = new RequestFilter(original.channelId, original.startTime, original.endTime);
+        if(begin.isAfter(original.getEndTime()) || end.isBefore(original.getStartTime())) {
             return null;
         } // end of if ()
-        if(begin.isAfter(filterBegin)) {
-            result.start_time = begin;
+        if(begin.isAfter(original.getStartTime())) {
+            result.startTime = begin;
         } else {
-            result.start_time = original.start_time;
+            result.startTime = original.startTime;
         }
-        if(end.isBefore(filterEnd)) {
-            result.end_time = end;
+        if(end.isBefore(original.getEndTime())) {
+            result.endTime = end;
         } else {
-            result.end_time = original.end_time;
+            result.endTime = original.endTime;
         }
         return result;
     }

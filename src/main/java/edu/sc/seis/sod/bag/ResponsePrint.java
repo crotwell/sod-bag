@@ -16,11 +16,11 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseListElement;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
-import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLTagNames;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Unit;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 
@@ -459,7 +459,7 @@ public class ResponsePrint {
         }
         // no configured name, auto-generate
         return unit.toString();
-        } catch (StationXMLException e) {
+        } catch (UnknownUnit e) {
             // oh well
             return unit.getName();
         }

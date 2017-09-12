@@ -99,8 +99,8 @@ public class PhaseRequest  {
                     && LocationUtil.areSameLocation(channel, prevSiteLoc)) {
                 // don't need to do any work
                 return new RequestFilter(channel,
-                                         prevRequestFilter.start_time,
-                                         prevRequestFilter.end_time);
+                                         prevRequestFilter.startTime,
+                                         prevRequestFilter.endTime);
             }
         }
         double begin = getArrivalTime(beginPhase, channel, origin);
