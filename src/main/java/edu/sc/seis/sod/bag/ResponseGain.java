@@ -5,8 +5,10 @@ package edu.sc.seis.sod.bag;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 
 /**
  * Applies the overall sensitivity to a seismogram. This is purely a scale
@@ -18,17 +20,18 @@ public class ResponseGain {
      * Applies the overall sensitivity of the response to the seismogram. This
      * will promote short or int based seismograms to float to avoid rounding
      * and overflow problems.
+     * @throws UnknownUnit 
      */
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
                                             InstrumentSensitivity inst)
-            throws FissuresException {
+            throws FissuresException, UnknownUnit {
         if(!InstrumentSensitivity.isValid(inst)) {
             throw new IllegalArgumentException("Invalid instrumentation for "
                     + ChannelIdUtil.toString(seis.channel_id));
         }
         return apply(seis,
                      inst.getSensitivityValue(),
-                     inst.getInputUnits());
+                     StationXMLToFissures.convertUnit(inst.getInputUnits()));
     }
 
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
