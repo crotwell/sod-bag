@@ -8,6 +8,7 @@ package edu.sc.seis.sod.bag;
 
 import java.time.Duration;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -45,10 +46,9 @@ public class Pad implements LocalSeismogramFunction  {
     public LocalSeismogramImpl pad(LocalSeismogramImpl seis, Duration padSize) throws FissuresException  {
 
         SamplingImpl samp = seis.sampling_info;
-        double period = samp.getPeriod().convertTo(UnitImpl.SECOND).getValue();
-        UnitImpl sec_per_sec = UnitImpl.divide(UnitImpl.SECOND, UnitImpl.SECOND, "sec per sec");
+        double period = TimeUtils.durationToDoubleSeconds(samp.getPeriod());
 
-        int padPoints = (int)Math.ceil(padSize.divideBy(samp.getPeriod()).convertTo(sec_per_sec).get_value());
+        int padPoints = (int)(Math.ceil(TimeUtils.durationToDoubleSeconds(padSize) / period));
         return pad(seis, padPoints);
     }
 

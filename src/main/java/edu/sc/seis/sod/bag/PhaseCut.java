@@ -53,7 +53,7 @@ public class PhaseCut {
         Instant endTime = null;
         Instant originTime = origin.getOriginTime();
         if (beginArrivals.size() != 0) {
-            beginTime = originTime.plus(TimeUtils.durationFromSeconds(beginArrivals.get(0).getTime());
+            beginTime = originTime.plus(TimeUtils.durationFromSeconds(beginArrivals.get(0).getTime()));
             beginTime = beginTime.plus(beginOffset);
         } else {
             DistAz distAz = new DistAz(stationLoc, origin.getLocation());

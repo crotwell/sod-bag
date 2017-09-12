@@ -92,8 +92,6 @@ public class MotionVectorUtil {
 					  seismograms[0].y_unit,
 					  channel_group,
 					  seismograms[0].parm_ids,
-					  )seismograms[0].time_corrections,
-					  seismograms[0].sample_rate_history,
 					  data);
     }
     

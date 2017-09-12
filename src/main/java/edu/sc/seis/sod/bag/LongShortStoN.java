@@ -9,8 +9,8 @@ package edu.sc.seis.sod.bag;
 import java.time.Duration;
 import java.util.LinkedList;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 /** Adapted from reftrg.f from Tom Owens and reftrig.c from Passcal.
@@ -70,13 +70,13 @@ public class LongShortStoN {
         //   establish number of points in LTA and STA windows
         //    as well as in trgdly
 
-        double dt = seis.getSampling().getPeriod().convertTo(UnitImpl.SECOND).get_value();
-        int nlta=(int)(longTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nsta=(int)(shortTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int ntdly=(int)(delay.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nmean=(int)(meanTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        double dt = TimeUtils.durationToDoubleSeconds(seis.getSampling().getPeriod());
+        int nlta=(int)(TimeUtils.durationToDoubleSeconds(longTime) / dt) + 1;
+        int nsta=(int)(TimeUtils.durationToDoubleSeconds(shortTime) / dt) + 1;
+        int ntdly=(int)(TimeUtils.durationToDoubleSeconds(delay) / dt) + 1;
+        int nmean=(int)(TimeUtils.durationToDoubleSeconds(meanTime) / dt) + 1;
 
-        if (seis.getEndTime().minus(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
+        if (Duration.between(seis.getBeginTime(), seis.getEndTime()).toNanos() < delay.toNanos() || nsta > ntdly || ntdly > seis.getNumPoints()) {
             // seis is too short, so no trigger possible
             return new LongShortTrigger[0];
         }
@@ -107,9 +107,6 @@ public class LongShortStoN {
             ratio = sta/lta ;
 
         }
-        long seisStart = 0;
-        double sampling = 0;
-        boolean samplingAndStartSet = false;
         /*  now get rest of trace */
         for(int i=2*nsta ; i < seisData.length ; i++) {
             /* up date mean */
@@ -127,11 +124,6 @@ public class LongShortStoN {
             ratio = sta/lta ;
 
             if (ratio >= threshold) {
-                if(!samplingAndStartSet){
-                    seisStart = seis.getBeginTime().getMicroSecondTime();
-                    sampling = seis.getSampling().getPeriod().convertTo(UnitImpl.MICROSECOND).get_value();
-                    samplingAndStartSet = true;
-                }
                 LongShortTrigger trigger = new LongShortTrigger(seis,
                                                                 i,
                                                                 ratio,
@@ -151,12 +143,13 @@ public class LongShortStoN {
         //   establish number of points in LTA and STA windows
         //    as well as in trgdly
 
-        float dt = (float)seis.getSampling().getPeriod().convertTo(UnitImpl.SECOND).get_value();
-        int nlta=(int)(longTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int nsta=(int)(shortTime.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
-        int ntdly=(int)(delay.dividedBy(dt).convertTo(UnitImpl.SECOND).getValue()) + 1;
+        double dt = TimeUtils.durationToDoubleSeconds(seis.getSampling().getPeriod());
+        int nlta=(int)(TimeUtils.durationToDoubleSeconds(longTime) / dt) + 1;
+        int nsta=(int)(TimeUtils.durationToDoubleSeconds(shortTime) / dt) + 1;
+        int ntdly=(int)(TimeUtils.durationToDoubleSeconds(delay) / dt) + 1;
+        
 
-        if (seis.getEndTime().minus(seis.getBeginTime()).lessThan(delay) || nsta > ntdly || ntdly > seis.getNumPoints()) {
+        if (Duration.between(seis.getBeginTime(), seis.getEndTime()).toNanos() < delay.toNanos() || nsta > ntdly || ntdly > seis.getNumPoints()) {
             // seis is too short, so no trigger possible
             return new LongShortTrigger[0];
         }

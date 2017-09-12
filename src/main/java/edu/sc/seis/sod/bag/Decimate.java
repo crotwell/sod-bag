@@ -52,8 +52,6 @@ public class Decimate implements LocalSeismogramFunction {
                                           seis.y_unit,
                                           seis.channel_id,
                                           seis.parm_ids,
-                                          seis.time_corrections,
-                                          seis.sample_rate_history,
                                           outData);
         return outSeis;
     }

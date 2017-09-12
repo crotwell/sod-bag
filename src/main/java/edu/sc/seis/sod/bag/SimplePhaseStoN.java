@@ -141,7 +141,7 @@ public class SimplePhaseStoN {
         }
 
         Duration sampPeriod = seis.getSampling().getPeriod();
-        int phaseIndex = (int)seis.getBeginTime().minus(phaseTime).convertTo(UnitImpl.SECOND).dividedBy(sampPeriod).get_value();
+        int phaseIndex = (int)(TimeUtils.durationToDoubleSeconds(Duration.between(seis.getBeginTime(), phaseTime)) / TimeUtils.durationToDoubleSeconds(sampPeriod));
         float ratio = (float)(numerator/denominator);
         return new LongShortTrigger(seis, phaseIndex, ratio, (float)numerator, (float)denominator);
     }

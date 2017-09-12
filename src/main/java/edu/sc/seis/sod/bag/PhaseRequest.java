@@ -174,7 +174,7 @@ public class PhaseRequest  {
                                                         Duration minimumTime,
                                                         boolean negate) {
         Duration interval = Duration.ofNanos(Math.round(Duration.between(startPhaseTime,  endPhaseTime).toNanos()*ratio));
-        if(interval.lessThan(minimumTime)) {
+        if(interval.toNanos() < minimumTime.toNanos()) {
             return negateIfTrue(minimumTime, negate);
         }
         return negateIfTrue(interval, negate);
