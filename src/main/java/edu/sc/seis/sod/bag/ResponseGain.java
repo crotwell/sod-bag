@@ -2,12 +2,11 @@ package edu.sc.seis.sod.bag;
 
 
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.Sensitivity;
 
 /**
  * Applies the overall sensitivity to a seismogram. This is purely a scale
@@ -21,22 +20,15 @@ public class ResponseGain {
      * and overflow problems.
      */
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
-                                            Instrumentation inst)
+                                            InstrumentSensitivity inst)
             throws FissuresException {
-        if(!Instrumentation.isValid(inst)) {
+        if(!InstrumentSensitivity.isValid(inst)) {
             throw new IllegalArgumentException("Invalid instrumentation for "
                     + ChannelIdUtil.toString(seis.channel_id));
         }
         return apply(seis,
-                     inst.the_response.the_sensitivity,
-                     inst.the_response.stages[0].input_units);
-    }
-
-    public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,
-                                            Sensitivity sensitivity,
-                                            UnitImpl initialUnits)
-            throws FissuresException {
-        return apply(seis, sensitivity.sensitivity_factor, initialUnits);
+                     inst.getSensitivityValue(),
+                     inst.getInputUnits());
     }
 
     public static LocalSeismogramImpl apply(LocalSeismogramImpl seis,

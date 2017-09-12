@@ -1,12 +1,12 @@
 package edu.sc.seis.sod.bag;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.Sensitivity;
 
 public class ChannelSeismogram {
 
-	public ChannelSeismogram(Channel chan, LocalSeismogramImpl seis, Sensitivity sensitivity) {
+	public ChannelSeismogram(Channel chan, LocalSeismogramImpl seis, InstrumentSensitivity sensitivity) {
 		this.seis = seis;
 		this.chan = chan;
 		this.sensitivity = sensitivity;
@@ -20,7 +20,7 @@ public class ChannelSeismogram {
 		return seis;
 	}
 
-	public Sensitivity getSensitivity() {
+	public InstrumentSensitivity getSensitivity() {
         if(sensitivity == null){
             throw new UnsupportedOperationException("This channelseismogram has no sensitivity");
         }
@@ -31,5 +31,5 @@ public class ChannelSeismogram {
 
 	Channel chan;
 
-	Sensitivity sensitivity;
+	InstrumentSensitivity sensitivity;
 }
