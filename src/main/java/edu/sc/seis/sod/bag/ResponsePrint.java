@@ -1,13 +1,13 @@
 package edu.sc.seis.sod.bag;
 
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.TimeZone;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.BaseFilterType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Coefficients;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
@@ -54,9 +54,6 @@ public class ResponsePrint {
     public static String printResponse(ChannelId chanId,
                                        Response response,
                                        TimeRange effective_time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy,DDD,HH:mm:ss");
-        TimeZone gmt = TimeZone.getTimeZone("GMT");
-        sdf.setTimeZone(gmt);
         Instant stime = effective_time.getBeginTime();
         Instant etime = effective_time.getEndTime();
         InstrumentSensitivity sensitivity = response.getInstrumentSensitivity();
@@ -112,11 +109,8 @@ public class ResponsePrint {
         s.append(id.getChannelCode() + "           |\n");
         Instant stime = effective_time.getBeginTime();
         Instant etime = effective_time.getEndTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        TimeZone gmt = TimeZone.getTimeZone("GMT");
-        sdf.setTimeZone(gmt);
-        s.append("#                   |     " + sdf.format(stime));
-        s.append(" to " + sdf.format(etime) + "      |\n");
+        s.append("#                   |     " + mdyFormat.format(stime));
+        s.append(" to " + mdyFormat.format(etime) + "      |\n");
         s.append("#                   +-----------------------------------+\n");
         s.append("#\n");
         return s.toString();
@@ -489,4 +483,8 @@ public class ResponsePrint {
         addToNameMap(UnitImpl.PASCAL, "P");
         addToNameMap(UnitImpl.TESLA, "T");
     }
+    
+    static DateTimeFormatter mdyFormat = TimeUtils.createFormatter("MM/dd/yyyy");
+
+    static DateTimeFormatter sdf = TimeUtils.createFormatter("yyyy,DDD,HH:mm:ss");
 }
