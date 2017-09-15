@@ -158,7 +158,7 @@ public class PhaseRequest  {
             return 0;
         }
         String[] phases = {phase};
-        List<Arrival> arrivals = util.calcTravelTimes(new Location(chan),
+        List<Arrival> arrivals = util.calcTravelTimes(chan,
                                                   origin,
                                                   phases);
         if(arrivals.size() == 0) {
