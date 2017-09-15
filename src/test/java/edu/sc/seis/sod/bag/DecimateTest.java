@@ -22,7 +22,7 @@ public class DecimateTest extends TestCase {
         Decimate decimate = new Decimate(factor);
         LocalSeismogramImpl out = decimate.apply(seis);
         assertEquals("seis length", seis.getNumPoints()/factor, out.getNumPoints());
-        assertEquals("sampling period", seis.getSampling().getPeriod(),
+        assertEquals("sampling period", seis.getSampling().getPeriod().multipliedBy(factor),
                      out.getSampling().getPeriod());
     }
 }

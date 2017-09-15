@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import edu.sc.seis.sod.mock.Defaults;
@@ -27,7 +29,8 @@ public class RotateTest  {
 
     float[] origy;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         origx = new float[3];
         origy = new float[3];
         origx[0] = 0;
@@ -38,7 +41,8 @@ public class RotateTest  {
         origy[2] = -.5f;
     }
 
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         origx = null;
         origy = null;
     }
@@ -60,6 +64,7 @@ public class RotateTest  {
         assertArrayEquals(origx, x, 0.0001f);
     }
 
+    @Test
     public void testRotateGCP() throws Exception {
         Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
@@ -87,6 +92,7 @@ public class RotateTest  {
                      0.001f);
     }
 
+    @Test
     public void testRotateGCPWithOrientation() throws Exception {
         Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
@@ -125,6 +131,7 @@ public class RotateTest  {
                      0.001f);
     }
     
+    @Test
     public void testRotateGCPXAxis() throws Exception {
         Instant now = Instant.now();
         // both spikes are same, so 45 degree part motion e and n
@@ -143,6 +150,7 @@ public class RotateTest  {
         assertEquals(" radial ", -100, ans[1][0], 0.001f);
     }
     
+    @Test
     public void testAreRotatable() {
         Orientation xOrient = new Orientation(88.3f, 0);
         Orientation yOrient = new Orientation(0, 0);

@@ -24,7 +24,7 @@ public class RTrendTest   {
     }
 
     @Before
-    protected void setUp() throws Exception  {
+    public void setUp() throws Exception  {
         short size = 400;
         intTestData = new int[size];
         shortTestData = new short[size];
@@ -62,7 +62,7 @@ public class RTrendTest   {
     }
 
     @After
-    protected void tearDown() throws Exception  {
+    public void tearDown() throws Exception  {
         rtrend = null;
     }
 

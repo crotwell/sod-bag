@@ -19,6 +19,6 @@ public class CmplxTest {
         for (int i = 0; i < fft.length; i++) {
             System.out.println(i+" "+fft[i].r+"  "+fft[i].i);
         }
-        assertTrue("just to get some output", false);
+        assertTrue("just to get some output", true);
     }
 }

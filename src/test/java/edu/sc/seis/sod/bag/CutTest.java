@@ -21,7 +21,7 @@ public class CutTest extends TestCase {
 
     LocalSeismogramImpl seis;
 
-    Instant time = TimeUtils.parseISOString("20001231T235959.000Z");
+    Instant time = TimeUtils.parseISOString("2000-12-31T23:59:59.000Z");
 
     int[] data;
     static {

@@ -45,10 +45,10 @@ public class HilbertTest extends TestCase {
     
     public void testVsSAC() throws IOException, FissuresException {
         DataInputStream in =
-            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/fissuresUtil/bag/delta.sac"));
+            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/delta.sac"));
         LocalSeismogramImpl delta = SacToFissures.getSeismogram(in);
         in =
-            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/fissuresUtil/bag/hilbert_delta.sac"));
+            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/hilbert_delta.sac"));
         LocalSeismogramImpl hilbert = SacToFissures.getSeismogram(in);
         LocalSeismogramImpl fisHilbert = (new Hilbert()).apply(delta);
         for(int i = 0; i < fisHilbert.get_as_floats().length; i++) {

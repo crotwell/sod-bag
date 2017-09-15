@@ -160,7 +160,7 @@ public class TransferTest  {
         SacTimeSeries sac = new SacTimeSeries();
         sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/IU.HRV.__.BHE.SAC"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
         float[] data = seis.get_as_floats();
         double samprate = seis.getSampling().getFrequency().getValue(UnitImpl.HERTZ);
@@ -170,7 +170,7 @@ public class TransferTest  {
         Cmplx[] out = Cmplx.fft(data);
         SacPoleZero poleZero = new SacPoleZero(new BufferedReader(new InputStreamReader(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/hrv.bhe.sacpz"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/hrv.bhe.sacpz"))));
         double[][] sacout = {  {0, 0, 0},
                                {0.000610352, -0, 0},
                                {0.0012207, -0, 0},
@@ -237,7 +237,7 @@ public class TransferTest  {
         SacTimeSeries sac = new SacTimeSeries();
         sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/IU.HRV.__.BHE.SAC"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
         double samprate = seis.getSampling()
         .getFrequency()
@@ -292,14 +292,14 @@ public class TransferTest  {
         SacTimeSeries sac = new SacTimeSeries();
         sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/IU.HRV.__.BHE.SAC"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
         double samprate = seis.getSampling()
                 .getFrequency()
                 .getValue(UnitImpl.HERTZ);
         SacPoleZero pz = new SacPoleZero(new BufferedReader(new InputStreamReader(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/hrv.bhe.sacpz"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/hrv.bhe.sacpz"))));
         float[] data = seis.get_as_floats();
         for(int i = 0; i < data.length; i++) {
             data[i] /= samprate;
@@ -364,15 +364,15 @@ public class TransferTest  {
         SacTimeSeries sac = new SacTimeSeries();
         sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/transfer.sac"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/transfer.sac"))));
         LocalSeismogramImpl sactfr = SacToFissures.getSeismogram(sac);
         sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/IU.HRV.__.BHE.SAC"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl orig = SacToFissures.getSeismogram(sac);
         SacPoleZero pz = new SacPoleZero(new BufferedReader(new InputStreamReader(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/hrv.bhe.sacpz"))));
+                .getResourceAsStream("edu/sc/seis/sod/bag/hrv.bhe.sacpz"))));
         LocalSeismogramImpl bagtfr = new Transfer().apply(orig,
                                                           pz,
                                                           .005f,

@@ -80,7 +80,7 @@ public class IterDeconTest {
         sac.write("withGauss.ITR.sac");
         DataInputStream in = new DataInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/withGauss.predicted.sac"));
+                .getResourceAsStream("edu/sc/seis/sod/bag/withGauss.predicted.sac"));
         sac.read(in);
         float[] fortranData = sac.getY();
         int[] s = result.getShifts();
@@ -178,19 +178,19 @@ public class IterDeconTest {
         SacTimeSeries sac = new SacTimeSeries();
         DataInputStream in = new DataInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/ESK1999_312_16.predicted.sac"));
+                .getResourceAsStream("edu/sc/seis/sod/bag/ESK1999_312_16.predicted.sac"));
         sac.read(in);
         in.close();
         float[] fortranData = sac.getY();
         in = new DataInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/ESK_num.sac"));
+                .getResourceAsStream("edu/sc/seis/sod/bag/ESK_num.sac"));
         sac.read(in);
         in.close();
         float[] num = sac.getY();
         in = new DataInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/ESK_denom.sac"));
+                .getResourceAsStream("edu/sc/seis/sod/bag/ESK_denom.sac"));
         sac.read(in);
         in.close();
         float[] denom = sac.getY();
@@ -282,7 +282,7 @@ public class IterDeconTest {
         SacTimeSeries sac = new SacTimeSeries();
         DataInputStream in = new DataInputStream(this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("edu/sc/seis/fissuresUtil/bag/gauss1024.sac"));
+                .getResourceAsStream("edu/sc/seis/sod/bag/gauss1024.sac"));
         sac.read(in);
         float[] data = new float[sac.getHeader().getNpts()];
         data[100] = 1 / sac.getHeader().getDelta();

@@ -62,7 +62,7 @@ public class LongShortStoNTest extends TestCase {
 
     public void testVsRefTrigMseed() throws Exception {
         DataInputStream in =
-            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/fissuresUtil/bag/03.141.18.40.32.0551.6.m"));
+            new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/03.141.18.40.32.0551.6.m"));
         LinkedList<DataRecord> drList = new LinkedList<DataRecord>();
         try {
             while (true) {

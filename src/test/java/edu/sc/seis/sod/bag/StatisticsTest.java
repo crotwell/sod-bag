@@ -38,12 +38,12 @@ public class StatisticsTest {
 
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         stat = createInstanceArray();
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         stat = null;
     }
 
