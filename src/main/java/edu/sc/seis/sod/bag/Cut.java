@@ -7,7 +7,6 @@ import java.util.List;
 
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.EncodedData;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -236,9 +235,6 @@ public class Cut implements LocalSeismogramFunction {
         return out.toArray(new LocalSeismogramImpl[0]);
     }
     
-}
-
-class CutReduceTool extends ReduceTool {
     
     /**
      * Return an array with any overlapping seismograms turned into a single
@@ -253,7 +249,7 @@ class CutReduceTool extends ReduceTool {
             tmp[i] = seis[i];
         }
         seis = tmp;
-        LSMerger merger = new LSMerger();
+        ReduceTool.LSMerger merger = new ReduceTool.LSMerger();
         for(int i = 0; i < seis.length; i++) {
             if(seis[i] == null) {
                 continue;
@@ -265,10 +261,10 @@ class CutReduceTool extends ReduceTool {
                     if(seis[j] == null) {
                         continue;
                     }
-                    if(contains(seis[i], seis[j])) {
+                    if(ReduceTool.contains(seis[i], seis[j])) {
                         seis[j] = null;
                         changeMade = true;
-                    } else if(contains(seis[j], seis[i])) {
+                    } else if(ReduceTool.contains(seis[j], seis[i])) {
                         seis[i] = seis[j];
                         seis[j] = null;
                         changeMade = true;
