@@ -1,14 +1,15 @@
 package edu.sc.seis.sod.bag;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import edu.sc.seis.sod.mock.Defaults;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
@@ -29,7 +30,7 @@ public class RotateTest  {
 
     float[] origy;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         origx = new float[3];
         origy = new float[3];
@@ -41,7 +42,7 @@ public class RotateTest  {
         origy[2] = -.5f;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         origx = null;
         origy = null;
@@ -58,8 +59,8 @@ public class RotateTest  {
         assertEquals(0, y[0], 0.0001);
         assertEquals(1, x[1], 0.0001);
         assertEquals(-1, y[1], 0.0001);
-        assertEquals(" x from (.5, -.5)", -.5, x[2], 0.0001);
-        assertEquals(" y from (.5, -.5)", -.5, y[2], 0.0001);
+        assertEquals( -.5, x[2], 0.0001, " x from (.5, -.5)");
+        assertEquals( -.5, y[2], 0.0001, " y from (.5, -.5)");
         Rotate.rotate(x, y, Math.PI / 2); // inverse transform
         assertArrayEquals(origx, x, 0.0001f);
     }
@@ -80,16 +81,16 @@ public class RotateTest  {
                                        Defaults.ZERO_K);
         float[][] ans = Rotate.rotateGCP(xSeis, ySeis, staLoc, evtLoc);
         DistAz distAz = new DistAz(staLoc, evtLoc);
-        assertEquals(" transverse ",
+        assertEquals(
                      100 * Math.sqrt(2)
                              * Math.sin(Rotate.dtor(distAz.getBaz() - 45)),
                      ans[0][0],
-                     0.001f);
-        assertEquals(" radial ",
+                     0.001f, " transverse ");
+        assertEquals(
                      -100 * Math.sqrt(2)
                              * Math.cos(Rotate.dtor(distAz.getBaz() - 45)),
                      ans[1][0],
-                     0.001f);
+                     0.001f, " radial ");
     }
 
     @Test
@@ -109,26 +110,26 @@ public class RotateTest  {
                                        Defaults.ZERO_K,
                                        Defaults.ZERO_K);
         LocalSeismogramImpl[] ans = Rotate.rotateGCP(xSeis, xOrient, ySeis, yOrient, staLoc, evtLoc, "T", "R");
-        assertEquals(" transverse ",
+        assertEquals(
                      -100 * Math.sqrt(2),
                      ans[0].get_as_floats()[0],
-                     0.001f);
-        assertEquals(" radial ",
+                     0.001f, " transverse ");
+        assertEquals(
                      0,
                      ans[1].get_as_floats()[0],
-                     0.001f);
+                     0.001f, " radial ");
         // try with x and y swapped, ans should be same
         xOrient = new Orientation(45, 0);
         yOrient = new Orientation(135, 0);
         ans = Rotate.rotateGCP(xSeis, xOrient, ySeis, yOrient, staLoc, evtLoc, "T", "R");
-        assertEquals(" transverse ",
+        assertEquals(
                      -100 * Math.sqrt(2),
                      ans[0].get_as_floats()[0],
-                     0.001f);
-        assertEquals(" radial ",
+                     0.001f, " transverse ");
+        assertEquals(
                      0,
                      ans[1].get_as_floats()[0],
-                     0.001f);
+                     0.001f, " radial ");
     }
     
     @Test
@@ -146,8 +147,8 @@ public class RotateTest  {
                                        Defaults.ZERO_K,
                                        Defaults.ZERO_K);
         float[][] ans = Rotate.rotateGCP(xSeis, ySeis, staLoc, evtLoc);
-        assertEquals(" transverse ", 100, ans[0][0], 0.001f);
-        assertEquals(" radial ", -100, ans[1][0], 0.001f);
+        assertEquals( 100, ans[0][0], 0.001f, " transverse ");
+        assertEquals( -100, ans[1][0], 0.001f, " radial ");
     }
     
     @Test
@@ -156,6 +157,6 @@ public class RotateTest  {
         Orientation yOrient = new Orientation(0, 0);
         float toleranceDegrees = 5f;
         
-        assertTrue("test 0, 0 and 88.3,0", Rotate.areRotatable( xOrient,  yOrient,  toleranceDegrees));
+        assertTrue( Rotate.areRotatable( xOrient,  yOrient,  toleranceDegrees), "test 0, 0 and 88.3,0");
     }
 }

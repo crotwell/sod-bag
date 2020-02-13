@@ -1,10 +1,13 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import junit.framework.TestCase;
 
 
 /**
@@ -14,7 +17,6 @@ import junit.framework.TestCase;
  */
 
 public class CalculusTest
-		extends TestCase
 {
 	Calculus calculus =  new Calculus();
 
@@ -30,7 +32,7 @@ public class CalculusTest
 		LocalSeismogramImpl intSeis = Calculus.integrate(diffSeis);
 		float[] intData = intSeis.get_as_floats();
 		for (int i = 1; i < diff.length; i++) {
-			assertEquals(""+i, i,intData[i], 0.001f);
+			assertEquals( i,intData[i], 0.001f, ""+i);
 		}
 	}
 	public void testIntegrate() throws Exception {
@@ -43,7 +45,7 @@ public class CalculusTest
 		LocalSeismogramImpl intSeis = Calculus.integrate(diffSeis);
 		float[] intData = intSeis.get_as_floats();
 		for (int i = 1; i < diff.length; i++) {
-			assertEquals(""+i, (float)i,intData[i]);
+			assertEquals( (float)i,intData[i], ""+i);
 		}
 	}
 

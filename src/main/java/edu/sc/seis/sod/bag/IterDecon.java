@@ -427,7 +427,6 @@ public class IterDecon {
 //            useNativeFFT = false;
 //        }
 //    }
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(IterDecon.class);
 
 }// IterDecon
 

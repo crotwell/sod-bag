@@ -1,5 +1,9 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -7,14 +11,13 @@ import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.sac.SacToFissures;
-import junit.framework.TestCase;
 
 
 /**
  * @author crotwell
  * Created on Apr 26, 2005
  */
-public class HilbertTest extends TestCase {
+public class HilbertTest  {
 
     public void testImpluseResponse() throws Exception {
         Hilbert hilbert = new Hilbert();
@@ -52,7 +55,7 @@ public class HilbertTest extends TestCase {
         LocalSeismogramImpl hilbert = SacToFissures.getSeismogram(in);
         LocalSeismogramImpl fisHilbert = (new Hilbert()).apply(delta);
         for(int i = 0; i < fisHilbert.get_as_floats().length; i++) {
-            assertEquals(i+" ", hilbert.get_as_floats()[i], fisHilbert.get_as_floats()[i], 0.01);
+            assertEquals( hilbert.get_as_floats()[i], fisHilbert.get_as_floats()[i], 0.01, i+" ");
         }
     }
 }

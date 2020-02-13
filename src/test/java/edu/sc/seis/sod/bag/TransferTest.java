@@ -1,13 +1,15 @@
 package edu.sc.seis.sod.bag;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.InputStreamReader;
 
-import org.junit.Test;
 
 import edu.sc.seis.seisFile.sac.Complex;
 import edu.sc.seis.seisFile.sac.SacPoleZero;
@@ -55,7 +57,7 @@ public class TransferTest  {
                               { 0.0109863, 0.000610352, 0.000610352 },
                               { 0.0115967, 0.000610352, 0.000610352 } };
         for(int i = 0; i < sacout.length; i++) {
-            assertEquals("taper "+i, sacout[i][2], sacout[0][1]*Transfer.freqTaper(sacout[i][0], .005f, .01f, 1e5f, 1e6f), 0.00001);
+            assertEquals(sacout[i][2], sacout[0][1]*Transfer.freqTaper(sacout[i][0], .005f, .01f, 1e5f, 1e6f), 0.00001, "taper "+i);
             
         }
     }
@@ -149,9 +151,9 @@ public class TransferTest  {
         for(int i = 1; i < sacout.length; i++) {
             Cmplx dhi = Transfer.evalPoleZeroInverse(new PoleZeroTranslator(pz), (float)sacout[i][0]);
             dhi = Cmplx.div(new Cmplx(1, 0), dhi);
-            assertEquals("real " + i, 1, sacout[i][1] / dhi.real(), 0.00001);
+            assertEquals( 1, sacout[i][1] / dhi.real(), 0.00001, "real " + i);
             // sac fft is opposite sign in imag, so want ratio to be -1
-            assertEquals("imag " + i, -1, sacout[i][2] / dhi.imag(), 0.00001);
+            assertEquals(-1, sacout[i][2] / dhi.imag(), 0.00001, "imag " + i);
         }
     }
 
@@ -200,7 +202,7 @@ public class TransferTest  {
         Cmplx respAtS;
         for(int i = 0; i < sacout.length; i++) {
             freq = i * deltaF;
-            assertEquals("deltaF "+i, sacout[i][0], freq, 0.00001);
+            assertEquals( sacout[i][0], freq, 0.00001, "deltaF "+i);
             respAtS = Transfer.evalPoleZeroInverse(new PoleZeroTranslator(poleZero), freq);
             respAtS = Cmplx.mul(respAtS, deltaF*Transfer.freqTaper(freq,
                                                    lowCut,
@@ -209,24 +211,24 @@ public class TransferTest  {
                                                    highCut));
 
             if(sacout[i][0] == 0 || respAtS.real() == 0) {
-                assertEquals("real " + i + " " + respAtS.real()+"   "+sacout[i][1],
-                             sacout[i][1],
+                assertEquals(sacout[i][1],
                              respAtS.real() ,
-                             0.00001);
+                             0.00001, "real " + i + " " + respAtS.real()+"   "+sacout[i][1]);
             } else {
-                assertEquals("real " + i + " " + respAtS.real()+"   "+sacout[i][1], 1, sacout[i][1]
-                        / respAtS.real(), 0.00001);
+                assertEquals( 1, sacout[i][1]
+                        / respAtS.real(), 0.00001, "real " + i + " " + respAtS.real()+"   "+sacout[i][1]);
             }
             if(sacout[i][1] == 0 || respAtS.imag() == 0) {
-                assertEquals("imag " + i + " " + respAtS.imag(),
+                assertEquals(
                              sacout[i][2],
                              respAtS.imag() ,
-                             0.00001);
+                             0.00001, "imag " + i + " " + respAtS.imag());
             } else {
-                assertEquals("imag " + i + " " + respAtS.imag(),
-                             -1,
-                             sacout[i][2] / respAtS.imag() ,
-                             0.00001);
+                assertEquals(-1,
+                        sacout[i][2] / respAtS.imag() ,
+                        0.00001,
+                        "imag " + i + " " + respAtS.imag()
+                             );
             }
             
         }
@@ -272,18 +274,18 @@ public class TransferTest  {
                                             {-5407.14, 32410.2},
                                             {-11010.8, 4728.02},
                                             {-15558.3, -24774.9}};
-        assertEquals("real " + 0 + " " + out[0].real(), 1, sacout[0][0]
-                / out[0].real() , 0.00001);
-        assertEquals("imag " + 0 + " " + out[0].imag(),
-                     sacout[0][1],
+        assertEquals( 1, sacout[0][0]
+                / out[0].real() , 0.00001, "real " + 0 + " " + out[0].real());
+        assertEquals(sacout[0][1],
                      -out[0].imag() ,
-                     0.00001);
+                     0.00001, "imag " + 0 + " " + out[0].imag()
+                     );
         for(int i = 1; i < sacout.length; i++) {
-            assertEquals("real " + i + " " + out[i].real(), 1, sacout[i][0]
-                    / out[i].real(), 0.00001);
+            assertEquals( 1, sacout[i][0]
+                    / out[i].real(), 0.00001, "real " + i + " " + out[i].real());
             // sac fft is opposite sign imag, so ratio is -1
-            assertEquals("imag " + i + " " + out[i].imag(), -1, sacout[i][1]
-                    / out[i].imag(), 0.00001);
+            assertEquals( -1, sacout[i][1]
+                    / out[i].imag(), 0.00001 , "imag " + i + " " + out[i].imag());
         }
     }
 
@@ -307,8 +309,8 @@ public class TransferTest  {
         
         
         Cmplx[] out = Cmplx.fft(data);
-        assertEquals("nfft", 32768, out.length);
-        assertEquals("delfrq ", 0.000610352, samprate/out.length, 0.00001);
+        assertEquals( 32768, out.length, "nfft");
+        assertEquals( 0.000610352, samprate/out.length, 0.00001, "delfrq ");
         out = Transfer.combine(out, samprate, new PoleZeroTranslator(pz), 0.005f, 0.01f, 1e5f, 1e6f);
         double[][] sacout = { {0, 0},
                              {0, -0},
@@ -333,24 +335,24 @@ public class TransferTest  {
 
         for(int i = 0; i < sacout.length; i++) {
             if(sacout[i][0] == 0 || out[i].real() == 0) {
-                assertEquals("real " + i + " " + out[i].real()+"  "+sacout[i][0],
+                assertEquals(
                              sacout[i][0],
                              out[i].real() ,
-                             0.00001);
+                             0.00001, "real " + i + " " + out[i].real()+"  "+sacout[i][0]);
             } else {
-                assertEquals("real " + i + " " + out[i].real()+"  "+sacout[i][0], 1, sacout[i][0]
-                        / out[i].real(), 0.00001);
+                assertEquals( 1, sacout[i][0]
+                        / out[i].real(), 0.00001, "real " + i + " " + out[i].real()+"  "+sacout[i][0]);
             }
             if(sacout[i][1] == 0 || out[i].imag() == 0) {
-                assertEquals("imag " + i + " " + out[i].imag()+"  "+sacout[i][1],
+                assertEquals(
                              sacout[i][1],
                              out[i].imag() ,
-                             0.00001);
+                             0.00001, "imag " + i + " " + out[i].imag()+"  "+sacout[i][1]);
             } else {
-                assertEquals("imag " + i + " " + out[i].imag()+"  "+sacout[i][1],
+                assertEquals(
                              -1,
                              sacout[i][1] / out[i].imag(),
-                             0.00001);
+                             0.00001, "imag " + i + " " + out[i].imag()+"  "+sacout[i][1]);
             }
         }
     }
@@ -383,9 +385,9 @@ public class TransferTest  {
         float[] bagdata = bagtfr.get_as_floats();
         for(int i = 0; i < bagdata.length && i < 20; i++) {
             if (bagdata[i] == 0) {
-                assertEquals("data", sacdata[i] , bagdata[i], 0.0001f);
+                assertEquals( sacdata[i] , bagdata[i], 0.0001f);
             } else {
-                assertEquals("data", 1, sacdata[i] / bagdata[i], 0.0001f);
+                assertEquals( 1, sacdata[i] / bagdata[i], 0.0001f);
             }
         }
         

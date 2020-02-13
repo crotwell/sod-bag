@@ -1,5 +1,12 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import java.time.Instant;
 
 import org.apache.log4j.BasicConfigurator;
@@ -9,7 +16,6 @@ import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import junit.framework.TestCase;
 
 // JUnitDoclet end import
 /**
@@ -17,7 +23,7 @@ import junit.framework.TestCase;
  * Please see www.junitdoclet.org, www.gnu.org and www.objectfab.de for
  * informations about the tool, the licence and the authors.
  */
-public class CutTest extends TestCase {
+public class CutTest   {
 
     LocalSeismogramImpl seis;
 
@@ -28,12 +34,8 @@ public class CutTest extends TestCase {
         BasicConfigurator.configure();
     }
 
-    public CutTest(String name) {
-        super(name);
-    }
-
+    @BeforeAll
     protected void setUp() throws Exception {
-        super.setUp();
         data = new int[101];
         for(int i = 0; i < data.length; i++) {
             data[i] = 0;
@@ -45,10 +47,10 @@ public class CutTest extends TestCase {
         seis = MockSeismogram.createTestData("est", data, time);
     }
 
+    @AfterAll
     protected void tearDown() throws Exception {
         seis = null;
         data = null;
-        super.tearDown();
     }
 
     public void testShiftBegin() throws Exception {
@@ -58,8 +60,8 @@ public class CutTest extends TestCase {
         begin = begin.plus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
-        assertTrue("Num points is one less " + out.num_points + " "
-                + seis.num_points, out.num_points == seis.num_points - 1);
+        assertTrue( out.num_points == seis.num_points - 1, "Num points is one less " + out.num_points + " "
+                + seis.num_points);
     }
 
     public void testShiftEnd() throws Exception {
@@ -69,8 +71,8 @@ public class CutTest extends TestCase {
         end = end.minus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
-        assertEquals("Num points is one less " + out.num_points + " "
-                + seis.num_points, out.num_points , seis.num_points - 1);
+        assertEquals( out.num_points , seis.num_points - 1, "Num points is one less " + out.num_points + " "
+                + seis.num_points);
     }
 
     public void testOffBegin() throws Exception {
@@ -80,8 +82,8 @@ public class CutTest extends TestCase {
         begin = begin.minus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
-        assertEquals("Num points is equal " + out.num_points + " "
-                + seis.num_points, out.num_points , seis.num_points );
+        assertEquals( out.num_points , seis.num_points, "Num points is equal " + out.num_points + " "
+                + seis.num_points);
     }
 
     public void testOffEnd() throws Exception {
@@ -91,8 +93,8 @@ public class CutTest extends TestCase {
         end = end.plus(samp.getPeriod());
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
-        assertEquals("Num points is equal  " + out.num_points + " "
-                + seis.num_points, out.num_points , seis.num_points );
+        assertEquals( out.num_points , seis.num_points, "Num points is equal  " + out.num_points + " "
+                + seis.num_points );
     }
     
     public void testExactSeisTimes() throws FissuresException {
@@ -100,7 +102,7 @@ public class CutTest extends TestCase {
         Instant end = seis.getEndTime();
         Cut cut = new Cut(begin, end);
         LocalSeismogramImpl out = cut.apply(seis);
-        assertEquals("Num points is same less " + out.num_points + " "
-                + seis.num_points, out.num_points , seis.num_points );
+        assertEquals( out.num_points , seis.num_points , "Num points is same less " + out.num_points + " "
+                + seis.num_points);
     }
 }

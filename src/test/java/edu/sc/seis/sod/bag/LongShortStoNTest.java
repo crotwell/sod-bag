@@ -6,6 +6,10 @@
 
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.time.Duration;
@@ -19,9 +23,8 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
-import junit.framework.TestCase;
 
-public class LongShortStoNTest extends TestCase {
+public class LongShortStoNTest  {
 
     public void teXstSimple() throws FissuresException {
         LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(4),
