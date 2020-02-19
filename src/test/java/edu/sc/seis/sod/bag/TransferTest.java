@@ -381,11 +381,42 @@ public class TransferTest  {
                                                           1e6f);
         float[] sacdata = sactfr.get_as_floats();
         float[] bagdata = bagtfr.get_as_floats();
-        for(int i = 0; i < bagdata.length && i < 20; i++) {
-            if (bagdata[i] == 0) {
-                assertEquals("data", sacdata[i] , bagdata[i], 0.0001f);
+        for(int i = 0; i < bagdata.length ; i++) {
+            if (bagdata[i] == 0 || Math.abs(bagdata[i]) < 1e-10) {
+                assertEquals("data["+i+"] "+sacdata[i] +" == "+ bagdata[i], sacdata[i] , bagdata[i], 0.0001f);
             } else {
-                assertEquals("data", 1, sacdata[i] / bagdata[i], 0.0001f);
+                assertEquals("data["+i+"] "+sacdata[i] +" / "+ bagdata[i], 1, sacdata[i] / bagdata[i], 0.0001f);
+            }
+        }
+        
+    }
+    @Test
+    public void testImpulse() throws Exception {
+        SacTimeSeries sac = new SacTimeSeries();
+        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("edu/sc/seis/sod/bag/impulse_transfer.sac"))));
+        LocalSeismogramImpl sactfr = SacToFissures.getSeismogram(sac);
+        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("edu/sc/seis/sod/bag/impulse.sac"))));
+        LocalSeismogramImpl orig = SacToFissures.getSeismogram(sac);
+        SacPoleZero pz = new SacPoleZero(new BufferedReader(new InputStreamReader(this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("edu/sc/seis/sod/bag/hrv.bhe.sacpz"))));
+        LocalSeismogramImpl bagtfr = new Transfer().apply(orig,
+                                                          pz,
+                                                          .005f,
+                                                          0.01f,
+                                                          1e5f,
+                                                          1e6f);
+        float[] sacdata = sactfr.get_as_floats();
+        float[] bagdata = bagtfr.get_as_floats();
+        for(int i = 0; i < bagdata.length ; i++) {
+            if (bagdata[i] == 0) {
+                assertEquals("data["+i+"] "+sacdata[i] +" == "+ bagdata[i], sacdata[i] , bagdata[i], 0.0001f);
+            } else {
+                assertEquals("data["+i+"] "+sacdata[i] +" / "+ bagdata[i], 1, sacdata[i] / bagdata[i], 0.0001f);
             }
         }
         
