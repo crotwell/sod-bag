@@ -6,15 +6,19 @@
 
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.sod.mock.event.MockOrigin;
 import edu.sc.seis.sod.mock.station.MockStation;
-import junit.framework.TestCase;
 
-public class TauPUtilTest extends TestCase {
+public class TauPUtilTest   {
 
+    @Test
     public void testCalcTravelTimes() throws Exception {
         TauPUtil taup = TauPUtil.getTauPUtil();
         List<Arrival> arrivals = taup.calcTravelTimes(MockStation.createStation(),
@@ -23,7 +27,7 @@ public class TauPUtilTest extends TestCase {
         for (Arrival arrival : arrivals) {
             System.out.println(" "+arrival.toString());
         }
-        assertTrue("num arrivals="+arrivals.size(), arrivals.size()>0);
+        assertTrue( arrivals.size()>0);
     }
 }
 

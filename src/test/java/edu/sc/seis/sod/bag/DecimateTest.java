@@ -1,5 +1,9 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import java.time.Instant;
 
 import edu.sc.seis.seisFile.TimeUtils;
@@ -7,10 +11,10 @@ import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import junit.framework.TestCase;
 
-public class DecimateTest extends TestCase {
+public class DecimateTest  {
 
+    @Test
     public void testSimpleDecimate() throws Exception {
         int factor = 5;
         LocalSeismogramImpl seis = MockSeismogram.createTestData("test",
@@ -21,8 +25,8 @@ public class DecimateTest extends TestCase {
                                                                                             TimeUtils.ONE_SECOND));
         Decimate decimate = new Decimate(factor);
         LocalSeismogramImpl out = decimate.apply(seis);
-        assertEquals("seis length", seis.getNumPoints()/factor, out.getNumPoints());
-        assertEquals("sampling period", seis.getSampling().getPeriod().multipliedBy(factor),
-                     out.getSampling().getPeriod());
+        assertEquals( seis.getNumPoints()/factor, out.getNumPoints(), "seis length");
+        assertEquals(seis.getSampling().getPeriod().multipliedBy(factor),
+                     out.getSampling().getPeriod(), "sampling period");
     }
 }

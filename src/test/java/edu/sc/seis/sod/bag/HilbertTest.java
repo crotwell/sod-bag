@@ -1,5 +1,9 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -7,15 +11,15 @@ import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.util.convert.sac.SacToFissures;
-import junit.framework.TestCase;
 
 
 /**
  * @author crotwell
  * Created on Apr 26, 2005
  */
-public class HilbertTest extends TestCase {
+public class HilbertTest  {
 
+    @Test
     public void testImpluseResponse() throws Exception {
         Hilbert hilbert = new Hilbert();
         LocalSeismogramImpl testSeis = MockSeismogram.createDelta();
@@ -28,7 +32,8 @@ public class HilbertTest extends TestCase {
             assertEquals(hilbertSeis.get_as_floats()[i], (i%2==0 || i==0 ? 0 : (2/(Math.PI*i))), 0.0001);
         }
     }
-    
+
+    @Test
     public void testAnalyticSignal() throws FissuresException {
         Hilbert hilbert = new Hilbert();
         LocalSeismogramImpl testSeis = MockSeismogram.createDelta();
@@ -42,7 +47,8 @@ public class HilbertTest extends TestCase {
             assertEquals(hilbertSeis.get_as_floats()[i], a[i].i, 0.001);
         }
     }
-    
+
+    @Test
     public void testVsSAC() throws IOException, FissuresException {
         DataInputStream in =
             new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/delta.sac"));
@@ -52,7 +58,7 @@ public class HilbertTest extends TestCase {
         LocalSeismogramImpl hilbert = SacToFissures.getSeismogram(in);
         LocalSeismogramImpl fisHilbert = (new Hilbert()).apply(delta);
         for(int i = 0; i < fisHilbert.get_as_floats().length; i++) {
-            assertEquals(i+" ", hilbert.get_as_floats()[i], fisHilbert.get_as_floats()[i], 0.01);
+            assertEquals( hilbert.get_as_floats()[i], fisHilbert.get_as_floats()[i], 0.01, i+" ");
         }
     }
 }

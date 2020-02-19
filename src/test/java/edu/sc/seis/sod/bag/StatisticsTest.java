@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.bag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 public class StatisticsTest {
@@ -37,12 +37,12 @@ public class StatisticsTest {
     }
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         stat = createInstanceArray();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         stat = null;
     }
@@ -50,7 +50,7 @@ public class StatisticsTest {
     @Test
     public void testMin() throws Exception {
         for ( int i = 0; i<stat.length; i++) {
-            assertEquals("stat["+i+"]",  0, stat[i].min(), 0.0000001);
+            assertEquals(  0, stat[i].min(), 0.0000001, "stat["+i+"]");
         } // end of for ()
 
     }
@@ -58,14 +58,14 @@ public class StatisticsTest {
     @Test
     public void testMax() throws Exception {
         for ( int i = 0; i<stat.length; i++) {
-            assertEquals("stat["+i+"]",  stat[i].getLength()-1, stat[i].max(), 0.0000001);
+            assertEquals( stat[i].getLength()-1, stat[i].max(), 0.0000001, "stat["+i+"]");
         } // end of for ()
     }
 
     @Test
     public void testMean() throws Exception {
         for ( int i = 0; i<stat.length; i++) {
-            assertEquals("stat["+i+"]", (stat[i].getLength()-1.0)/2, stat[i].mean(), 0.0000001);
+            assertEquals((stat[i].getLength()-1.0)/2, stat[i].mean(), 0.0000001, "stat["+i+"]");
         } // end of for ()
     }
 
@@ -74,8 +74,8 @@ public class StatisticsTest {
     public void testLinearLeastSquares() throws Exception {
         for ( int i = 0; i<stat.length; i++) {
             double[] out = stat[i].linearLeastSquares();
-            assertEquals("stat["+i+"]", 0, out[0], 0.0000001*size);
-            assertEquals("stat["+i+"]", 1, out[1], 0.0000001*size);
+            assertEquals( 0, out[0], 0.0000001*size, "stat["+i+"]");
+            assertEquals( 1, out[1], 0.0000001*size, "stat["+i+"]");
         } // end of for ()
     }
 
@@ -87,8 +87,8 @@ public class StatisticsTest {
         }
         Statistics stat = new Statistics(data);
         double[] out = stat.linearLeastSquares();
-        assertEquals("stat0", 1, out[0], 0.0000001);
-        assertEquals("stat1", 0, out[1], 0.0000001);
+        assertEquals( 1, out[0], 0.0000001, "stat0");
+        assertEquals( 0, out[1], 0.0000001, "stat1");
     }
 
     @Test
@@ -99,8 +99,8 @@ public class StatisticsTest {
         }
         Statistics stat = new Statistics(data);
         double[] out = stat.linearLeastSquares();
-        assertEquals("stat0", 1, out[0], 0.0000001);
-        assertEquals("stat1", -2, out[1], 0.0000001);
+        assertEquals( 1, out[0], 0.0000001);
+        assertEquals( -2, out[1], 0.0000001);
     }
 
     @Test
@@ -128,8 +128,8 @@ public class StatisticsTest {
         bumps[15] = 55;
         Statistics stat = new Statistics(bumps);
         double[] out = stat.linearLeastSquares();
-        assertEquals("stat bumps 0", 9.4, out[0], 0.1);
-        assertEquals("stat bumps 1", 4.24, out[1], 0.01);
+        assertEquals( 9.4, out[0], 0.1);
+        assertEquals( 4.24, out[1], 0.01);
 
     }
 
@@ -153,7 +153,7 @@ public class StatisticsTest {
         for ( int i = 0; i<stat.length; i++) {
             int n=stat[i].getLength()-1;
             double out = stat[i].binarySum(0, stat[i].getLength());
-            assertEquals("BinarySum", n*(n+1)/2, out, 0.0000001);
+            assertEquals( n*(n+1)/2, out, 0.0000001);
         } // end of for ()
 
     }
@@ -164,7 +164,7 @@ public class StatisticsTest {
         for ( int i = 0; i<stat.length; i++) {
             int n=stat[i].getLength()-1;
             double sumSquare = 1.0*n*(n+1)*(2*n+1)/6;
-            assertEquals("stat["+i+"]", sumSquare, stat[i].binaryIndexSum(0, stat[i].getLength()), 0.00001*sumSquare);
+            assertEquals( sumSquare, stat[i].binaryIndexSum(0, stat[i].getLength()), 0.00001*sumSquare);
         } // end of for ()
         // JUnitDoclet end method binaryIndexSum
     }
@@ -195,7 +195,7 @@ public class StatisticsTest {
         }
     }
 
-    @Test(expected=ArithmeticException.class)
+    @Test
     public void testCorrelationNoVariance() {
         Statistics stat;
         double[] testData = new double[10];
@@ -206,7 +206,7 @@ public class StatisticsTest {
             testData[i] = 1;
         }
         stat = new Statistics(testData);
-        assertEquals("no variation, so no correlation", 0, stat.correlation(otherData), 0.00001);
+        assertEquals( 0, stat.correlation(otherData), 0.00001, "no variation, so no correlation");
     }
     @Test
     public void testCorrelation() {
@@ -219,7 +219,7 @@ public class StatisticsTest {
             testData[i] = i;
         }
         stat = new Statistics(testData);
-        assertEquals("perfect correlation", 1, stat.correlation(otherData), 0.00001);
+        assertEquals(1, stat.correlation(otherData), 0.00001, "perfect correlation");
         
 
         for(int i = 0; i < otherData.length; i++) {
@@ -227,7 +227,7 @@ public class StatisticsTest {
             testData[i] = -i;
         }
         stat = new Statistics(testData);
-        assertEquals("perfect anticorrelation", -1, stat.correlation(otherData), 0.00001);
+        assertEquals(-1, stat.correlation(otherData), 0.00001, "perfect anticorrelation");
         
 
         for(int i = 0; i < otherData.length; i++) {
@@ -235,7 +235,7 @@ public class StatisticsTest {
             testData[i] = i % 2;
         }
         stat = new Statistics(testData);
-        assertEquals("uncorrelated", 0, stat.correlation(otherData), 0.00001);
+        assertEquals( 0, stat.correlation(otherData), 0.00001, "uncorrelated");
     }
 
 }

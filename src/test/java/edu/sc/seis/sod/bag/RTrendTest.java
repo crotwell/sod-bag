@@ -1,10 +1,11 @@
 package edu.sc.seis.sod.bag;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 public class RTrendTest   {
@@ -23,7 +24,7 @@ public class RTrendTest   {
         return new RTrend();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception  {
         short size = 400;
         intTestData = new int[size];
@@ -61,7 +62,7 @@ public class RTrendTest   {
         rtrend = createInstance();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception  {
         rtrend = null;
     }
@@ -70,7 +71,7 @@ public class RTrendTest   {
     public void testApplyBumps() throws Exception  {
         short[] sOut = rtrend.apply(bumps);
         for (int i = 0; i < sOut.length; i++) {
-            assertEquals("short "+i, (short)Math.round(bumps[i]-(bumpSlope*i+bimpIntercept)), sOut[i]);
+            assertEquals( (short)Math.round(bumps[i]-(bumpSlope*i+bimpIntercept)), sOut[i], "short "+i);
         }
     }
 
@@ -82,14 +83,14 @@ public class RTrendTest   {
         }
         int[] sOut = rtrend.apply(iBumps);
         for (int i = 0; i < sOut.length; i++) {
-            assertEquals("intBumps "+i, (int)Math.round(bumps[i]-(bumpSlope*i+bimpIntercept)), sOut[i]);
+            assertEquals( (int)Math.round(bumps[i]-(bumpSlope*i+bimpIntercept)), sOut[i], "intBumps "+i);
         }
     }
     @Test
     public void testApplyShort() throws Exception  {
         short[] sOut = rtrend.apply(shortTestData);
         for (int i = 0; i < sOut.length; i++) {
-            assertEquals("short", 0, sOut[i]);
+            assertEquals( 0, sOut[i], "short");
         }
     }
 
@@ -97,7 +98,7 @@ public class RTrendTest   {
     public void testApplyInt() throws Exception  {
         int[] iOut = rtrend.apply(intTestData);
         for (int i = 0; i < iOut.length; i++) {
-            assertEquals("int", 0, iOut[i]);
+            assertEquals( 0, iOut[i], "int");
         }
     }
 
@@ -105,7 +106,7 @@ public class RTrendTest   {
     public void testApplyFloat() throws Exception  {
         float[] fOut = rtrend.apply(floatTestData);
         for (int i = 0; i < fOut.length; i++) {
-            assertEquals("float", 0, fOut[i], 0.0000001);
+            assertEquals( 0, fOut[i], 0.0000001, "float");
         }
     }
 
@@ -113,7 +114,7 @@ public class RTrendTest   {
     public void testApplyDouble() throws Exception  {
         double[] dOut = rtrend.apply(doubleTestData);
         for (int i = 0; i < dOut.length; i++) {
-            assertEquals("double", 0, dOut[i], 0.000001);
+            assertEquals( 0, dOut[i], 0.000001, "double");
         }
     }
 
