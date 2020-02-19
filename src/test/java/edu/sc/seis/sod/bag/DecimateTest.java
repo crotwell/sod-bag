@@ -14,6 +14,7 @@ import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 public class DecimateTest  {
 
+    @Test
     public void testSimpleDecimate() throws Exception {
         int factor = 5;
         LocalSeismogramImpl seis = MockSeismogram.createTestData("test",

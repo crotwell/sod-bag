@@ -3,13 +3,11 @@ package edu.sc.seis.sod.bag;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import java.time.Instant;
 
-import org.apache.log4j.BasicConfigurator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
@@ -30,11 +28,8 @@ public class CutTest   {
     Instant time = TimeUtils.parseISOString("2000-12-31T23:59:59.000Z");
 
     int[] data;
-    static {
-        BasicConfigurator.configure();
-    }
 
-    @BeforeAll
+    @BeforeEach
     protected void setUp() throws Exception {
         data = new int[101];
         for(int i = 0; i < data.length; i++) {
@@ -47,12 +42,13 @@ public class CutTest   {
         seis = MockSeismogram.createTestData("est", data, time);
     }
 
-    @AfterAll
+    @AfterEach
     protected void tearDown() throws Exception {
         seis = null;
         data = null;
     }
 
+    @Test
     public void testShiftBegin() throws Exception {
         Instant begin = time;
         Instant end = seis.getEndTime();
@@ -64,6 +60,7 @@ public class CutTest   {
                 + seis.num_points);
     }
 
+    @Test
     public void testShiftEnd() throws Exception {
         Instant begin = time;
         Instant end = seis.getEndTime();
@@ -75,6 +72,7 @@ public class CutTest   {
                 + seis.num_points);
     }
 
+    @Test
     public void testOffBegin() throws Exception {
         Instant begin = time;
         Instant end = seis.getEndTime();
@@ -86,6 +84,7 @@ public class CutTest   {
                 + seis.num_points);
     }
 
+    @Test
     public void testOffEnd() throws Exception {
         Instant begin = time;
         Instant end = seis.getEndTime();
@@ -96,7 +95,8 @@ public class CutTest   {
         assertEquals( out.num_points , seis.num_points, "Num points is equal  " + out.num_points + " "
                 + seis.num_points );
     }
-    
+
+    @Test
     public void testExactSeisTimes() throws FissuresException {
         Instant begin = time;
         Instant end = seis.getEndTime();

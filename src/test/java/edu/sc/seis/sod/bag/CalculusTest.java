@@ -20,6 +20,7 @@ public class CalculusTest
 {
 	Calculus calculus =  new Calculus();
 
+    @Test
 	public void testFloatIntegrate() throws Exception {
 		float[] diff = new float[10];
 		for (int i = 0; i < diff.length; i++) {
@@ -35,6 +36,7 @@ public class CalculusTest
 			assertEquals( i,intData[i], 0.001f, ""+i);
 		}
 	}
+    @Test
 	public void testIntegrate() throws Exception {
 		int[] diff = new int[10];
 		for (int i = 0; i < diff.length; i++) {

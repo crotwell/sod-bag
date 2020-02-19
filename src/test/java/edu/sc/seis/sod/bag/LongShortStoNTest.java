@@ -26,6 +26,7 @@ import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
 
 public class LongShortStoNTest  {
 
+    @Test
     public void teXstSimple() throws FissuresException {
         LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(4),
                                                Duration.ofSeconds(1),
@@ -42,6 +43,7 @@ public class LongShortStoNTest  {
         //  }
     }
 
+    @Test
     public void tesXtConstant() throws Exception {
         LongShortStoN ston = new LongShortStoN(Duration.ofSeconds(100),
                                                Duration.ofSeconds(6),
@@ -63,6 +65,7 @@ public class LongShortStoNTest  {
         }
     }
 
+    @Test
     public void testVsRefTrigMseed() throws Exception {
         DataInputStream in =
             new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/03.141.18.40.32.0551.6.m"));

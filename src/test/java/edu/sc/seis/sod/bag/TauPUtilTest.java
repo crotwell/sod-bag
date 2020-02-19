@@ -18,6 +18,7 @@ import edu.sc.seis.sod.mock.station.MockStation;
 
 public class TauPUtilTest   {
 
+    @Test
     public void testCalcTravelTimes() throws Exception {
         TauPUtil taup = TauPUtil.getTauPUtil();
         List<Arrival> arrivals = taup.calcTravelTimes(MockStation.createStation(),

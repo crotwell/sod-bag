@@ -16,12 +16,14 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 
 public class AreaUtilTest {
 
+    @Test
     public void testSimpleConvertToBox() {
         BoxAreaImpl b = new BoxAreaImpl(-90, 90, -180, 180);
         assertEquals(b, AreaUtil.makeContainingBox(b));
         assertEquals(b, AreaUtil.makeContainingBox(new GlobalAreaImpl()));
     }
-    
+
+    @Test
     public void testDonutConvertToBoxNearPole() {
         PointDistanceAreaImpl meridian = new PointDistanceAreaImpl(80,
                                                                0,
@@ -33,6 +35,7 @@ public class AreaUtilTest {
         assertTrue(eastFiveLon < box.max_longitude, "eastFive < max lon");
     }
 
+    @Test
     public void testDonutConvertToBox() {
         PointDistanceAreaImpl meridian = new PointDistanceAreaImpl(0,
                                                                0,
@@ -54,6 +57,7 @@ public class AreaUtilTest {
                      AreaUtil.makeContainingBox(eastOfDateLine));
     }
 
+    @Test
     public void testInPolygon() {
         QuantityImpl el = new QuantityImpl(0, UnitImpl.METER);
         QuantityImpl depth = new QuantityImpl(0, UnitImpl.METER);

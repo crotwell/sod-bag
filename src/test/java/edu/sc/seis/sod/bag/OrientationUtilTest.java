@@ -10,6 +10,7 @@ import edu.sc.seis.sod.model.common.Orientation;
 
 public class OrientationUtilTest  {
 
+    @Test
     public void testOrthognalPlusNintyDip() {
         for(float az = -180; az <= 180; az += .1) {
             Orientation one = new Orientation(az, 1);
@@ -21,6 +22,7 @@ public class OrientationUtilTest  {
         }
     }
 
+    @Test
     public void testOrthognalPlusNinty() {
         for(float az = -180; az <= 180; az += .1) {
             Orientation one = new Orientation(az, 0);
@@ -31,6 +33,7 @@ public class OrientationUtilTest  {
         }
     }
 
+    @Test
     public void testAreOrthogonal() {
         float[] az = new float[] {0, 5, 89, 359};
         float[] dip = new float[] {3, 10, -80, 80};

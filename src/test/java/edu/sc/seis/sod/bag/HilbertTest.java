@@ -19,6 +19,7 @@ import edu.sc.seis.sod.util.convert.sac.SacToFissures;
  */
 public class HilbertTest  {
 
+    @Test
     public void testImpluseResponse() throws Exception {
         Hilbert hilbert = new Hilbert();
         LocalSeismogramImpl testSeis = MockSeismogram.createDelta();
@@ -31,7 +32,8 @@ public class HilbertTest  {
             assertEquals(hilbertSeis.get_as_floats()[i], (i%2==0 || i==0 ? 0 : (2/(Math.PI*i))), 0.0001);
         }
     }
-    
+
+    @Test
     public void testAnalyticSignal() throws FissuresException {
         Hilbert hilbert = new Hilbert();
         LocalSeismogramImpl testSeis = MockSeismogram.createDelta();
@@ -45,7 +47,8 @@ public class HilbertTest  {
             assertEquals(hilbertSeis.get_as_floats()[i], a[i].i, 0.001);
         }
     }
-    
+
+    @Test
     public void testVsSAC() throws IOException, FissuresException {
         DataInputStream in =
             new DataInputStream(this.getClass().getClassLoader().getResourceAsStream("edu/sc/seis/sod/bag/delta.sac"));
