@@ -385,9 +385,9 @@ public class TransferTest  {
         float[] bagdata = bagtfr.get_as_floats();
         for(int i = 0; i < bagdata.length ; i++) {
             if (bagdata[i] == 0 || Math.abs(bagdata[i]) < 1e-10) {
-                assertEquals("data["+i+"] "+sacdata[i] +" == "+ bagdata[i], sacdata[i] , bagdata[i], 0.0001f);
+                assertEquals(sacdata[i] , bagdata[i], 0.0001f, "data["+i+"] "+sacdata[i] +" == "+ bagdata[i]);
             } else {
-                assertEquals("data["+i+"] "+sacdata[i] +" / "+ bagdata[i], 1, sacdata[i] / bagdata[i], 0.0001f);
+                assertEquals(1, sacdata[i] / bagdata[i], 0.0001f, "data["+i+"] "+sacdata[i] +" / "+ bagdata[i]);
             }
         }
         
@@ -416,9 +416,9 @@ public class TransferTest  {
         float[] bagdata = bagtfr.get_as_floats();
         for(int i = 0; i < bagdata.length ; i++) {
             if (bagdata[i] == 0) {
-                assertEquals("data["+i+"] "+sacdata[i] +" == "+ bagdata[i], sacdata[i] , bagdata[i], 0.0001f);
+                assertEquals(sacdata[i] , bagdata[i], 0.0001f, "data["+i+"] "+sacdata[i] +" == "+ bagdata[i]);
             } else {
-                assertEquals("data["+i+"] "+sacdata[i] +" / "+ bagdata[i], 1, sacdata[i] / bagdata[i], 0.0001f);
+                assertEquals(1, sacdata[i] / bagdata[i], 0.0001f, "data["+i+"] "+sacdata[i] +" / "+ bagdata[i]);
             }
         }
         
