@@ -8,6 +8,13 @@ plugins {
     eclipse
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    withJavadocJar()
+    withSourcesJar()
+}
+
 dependencies {
   implementation("edu.sc.seis:seedCodec:1.0.11")
   implementation("edu.sc.seis:seisFile:1.7.4")
