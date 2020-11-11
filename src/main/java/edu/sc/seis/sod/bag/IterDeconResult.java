@@ -104,7 +104,7 @@ public class IterDeconResult {
     /**
      * Sets AlignShift
      *
-     * @param    AlignShift          a  TimeInterval
+     * @param    alignShift          a  TimeInterval
      */
     public void setAlignShift(Duration alignShift) {
         this.alignShift = alignShift;

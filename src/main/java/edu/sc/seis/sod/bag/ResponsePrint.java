@@ -412,7 +412,7 @@ public class ResponsePrint {
      * 
      * @param id
      *            channel id for the response
-     * @param inst
+     * @param response
      *            the entire instrument response
      */
     public static String printSensitivity(ChannelId id, Response response, TimeRange effectiveTime) {

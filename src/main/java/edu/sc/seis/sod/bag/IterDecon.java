@@ -15,8 +15,7 @@ package edu.sc.seis.sod.bag;
  *
  * Created: Sat Mar 23 18:24:29 2002
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version $Id: IterDecon.java 21100 2010-02-23 19:25:21Z crotwell $
+ * @author Philip Crotwell * @version $Id: IterDecon.java 21100 2010-02-23 19:25:21Z crotwell $
  */
 
 public class IterDecon {

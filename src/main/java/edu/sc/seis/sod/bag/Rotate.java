@@ -106,7 +106,7 @@ public class Rotate  {
      * 
      * @throws FissuresException
      * @throws IncompatibleSeismograms
-     * @returns the rotated data from the two seismograms, index 0 is the
+     * @return the rotated data from the two seismograms, index 0 is the
      *          tangential and index 1 is the radial.
      */
     public static float[][] rotateGCP(LocalSeismogramImpl x,
@@ -135,7 +135,7 @@ public class Rotate  {
      * sense of the rotation is from x towards y.
      * 
      * @throws IncompatibleSeismograms
-     * @returns the rotated data from the two seismograms, index 0 is the new x
+     * @return the rotated data from the two seismograms, index 0 is the new x
      *          and index 1 is the new y.
      */
     public static float[][] rotate(LocalSeismogramImpl x,

@@ -15,7 +15,7 @@ import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
  * 
  * Created: Thu Aug 15 14:47:23 2002
  * 
- * @author <a href="mailto:">Philip Crotwell</a>
+ * @author Philip Crotwell
  * @version
  */
 

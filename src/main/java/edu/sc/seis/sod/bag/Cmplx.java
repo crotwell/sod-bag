@@ -267,7 +267,7 @@ public class Cmplx {
      * index i is the sum over j of fdata[i+j]*gdata[j], although using the FFT
      * is much faster than direct sum.
      * 
-     * @see http://www.ulib.org/webRoot/Books/Numerical_Recipes/bookcpdf.html
+     *  http://www.ulib.org/webRoot/Books/Numerical_Recipes/bookcpdf.html
      *      section 13-2
      */
     public static final float[] correlate(float[] fdata, float[] gdata) {
