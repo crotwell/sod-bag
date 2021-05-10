@@ -137,7 +137,7 @@ public class PhaseRequest  {
         eDate = eDate.plus(eInterval);
         synchronized(this) {
             prevOriginLoc = origin.getLocation();
-            prevSiteLoc = new Location(channel);
+            prevSiteLoc = Location.of(channel);
             prevOriginTime = origin.getOriginTime();
             prevRequestFilter = new RequestFilter(channel,
                                                   bDate,

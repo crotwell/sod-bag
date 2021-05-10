@@ -178,11 +178,10 @@ public class IterDeconTest {
 
     @Test
     public void testESK1999_312_16_45_41_6() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
         DataInputStream in = new DataInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/ESK1999_312_16.predicted.sac"));
-        sac.read(in);
+        SacTimeSeries sac = SacTimeSeries.read(in);
         in.close();
         float[] fortranData = sac.getY();
         in = new DataInputStream(this.getClass()
@@ -282,11 +281,10 @@ public class IterDeconTest {
 
     @Test
     public void testGaussianFilter() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
         DataInputStream in = new DataInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/gauss1024.sac"));
-        sac.read(in);
+        SacTimeSeries sac = SacTimeSeries.read(in);
         float[] data = new float[sac.getHeader().getNpts()];
         data[100] = 1 / sac.getHeader().getDelta();
         float[] sacData = sac.getY();

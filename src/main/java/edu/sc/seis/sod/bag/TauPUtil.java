@@ -29,13 +29,13 @@ public class TauPUtil {
     }
 
     public List<Arrival> calcTravelTimes(Station station, OriginImpl origin, String[] phaseNames) throws TauModelException {
-        return calcTravelTimes(new Location(station),
+        return calcTravelTimes(Location.of(station),
                                origin,
                                phaseNames);
     }
 
     public List<Arrival> calcTravelTimes(Channel channel, OriginImpl origin, String[] phaseNames) throws TauModelException {
-        return calcTravelTimes(new Location(channel), origin, phaseNames);
+        return calcTravelTimes(Location.of(channel), origin, phaseNames);
     }
 
 

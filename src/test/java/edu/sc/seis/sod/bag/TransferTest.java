@@ -159,8 +159,7 @@ public class TransferTest  {
 
     @Test
     public void testPoleZeroTaper() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
-        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+        SacTimeSeries sac = SacTimeSeries.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
@@ -236,8 +235,7 @@ public class TransferTest  {
 
     @Test
     public void testFFT() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
-        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+        SacTimeSeries sac = SacTimeSeries.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
@@ -291,8 +289,7 @@ public class TransferTest  {
 
     @Test
     public void testCombine() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
-        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+        SacTimeSeries sac = SacTimeSeries.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/IU.HRV.__.BHE.SAC"))));
         LocalSeismogramImpl seis = SacToFissures.getSeismogram(sac);
@@ -363,8 +360,7 @@ public class TransferTest  {
      */
     @Test
     public void testHRV() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
-        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+        SacTimeSeries sac = SacTimeSeries.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/transfer.sac"))));
         LocalSeismogramImpl sactfr = SacToFissures.getSeismogram(sac);
@@ -394,8 +390,7 @@ public class TransferTest  {
     }
     @Test
     public void testImpulse() throws Exception {
-        SacTimeSeries sac = new SacTimeSeries();
-        sac.read(new DataInputStream(new BufferedInputStream(this.getClass()
+        SacTimeSeries sac = SacTimeSeries.read(new DataInputStream(new BufferedInputStream(this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/bag/impulse_transfer.sac"))));
         LocalSeismogramImpl sactfr = SacToFissures.getSeismogram(sac);

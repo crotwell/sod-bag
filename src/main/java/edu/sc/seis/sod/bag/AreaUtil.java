@@ -57,7 +57,7 @@ public class AreaUtil {
     public static List<Channel> inArea(Area area, List<Channel> channels) {
         List<Channel> out = new ArrayList<Channel>();
         for(Channel chan : channels) {
-            if(inArea(area, new Location(chan))) {
+            if(inArea(area, Location.of(chan))) {
                 out.add(chan);
             }
         }
