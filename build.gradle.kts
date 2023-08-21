@@ -18,9 +18,9 @@ java {
 
 dependencies {
   implementation("edu.sc.seis:seedCodec:1.1.1")
-  implementation("edu.sc.seis:seisFile:2.0.0")
+  implementation("edu.sc.seis:seisFile:2.0.6")
   implementation("org.slf4j:slf4j-api:1.7.30")
-  implementation("edu.sc.seis:TauP:2.5.0")
+  implementation("edu.sc.seis:TauP:2.7.0-SNAPSHOT5")
   implementation("com.isti:isti.util:20120201")
   implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
   // Use JUnit Jupiter API for testing.
@@ -33,8 +33,8 @@ dependencies {
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {
-    substitute(module("edu.sc.seis:seisFile")).with(project(":seisFile"))
-    substitute(module("edu.sc.seis:seedCodec")).with(project(":seedCodec"))
+    substitute(module("edu.sc.seis:seisFile")).using(project(":seisFile"))
+    substitute(module("edu.sc.seis:seedCodec")).using(project(":seedCodec"))
   }
 }
 
