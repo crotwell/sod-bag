@@ -7,6 +7,7 @@ plugins {
     `java-library`
     `eclipse`
     `maven-publish`
+  id("com.github.ben-manes.versions") version "0.47.0"
 }
 
 java {
@@ -24,10 +25,10 @@ dependencies {
   implementation("com.isti:isti.util:20120201")
   implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
   // Use JUnit Jupiter API for testing.
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
 
   // Use JUnit Jupiter Engine for testing.
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.1")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 
